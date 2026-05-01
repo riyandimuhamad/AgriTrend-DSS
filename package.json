@@ -1,0 +1,21 @@
+{
+  "name": "agritrend-dss",
+  "version": "1.0.0",
+  "description": "Agri-Trend DSS: Sistem Pendukung Keputusan berbasis Machine Learning dan Generative AI untuk prediksi hasil panen dan wawasan pasar petani lokal.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/riyandimuhamad/AgriTrend-DSS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/riyandimuhamad/AgriTrend-DSS/issues"
+  },
+  "homepage": "https://github.com/riyandimuhamad/AgriTrend-DSS#readme"
+}
