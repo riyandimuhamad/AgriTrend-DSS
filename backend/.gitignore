@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+__init__.py
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual Environments
+.venv/
+venv/
+env/
+
+# Environment Variables
+.env
+
+# ML Models (binaries — store in Git LFS or S3)
+models/*.pkl
+models/*.joblib
+!models/.gitkeep
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
