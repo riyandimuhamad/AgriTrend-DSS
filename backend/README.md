@@ -13,7 +13,26 @@ Struktur modular sederhana untuk belajar:
 - `POST /api/v1/auth/register`
 - `POST /api/v1/auth/login`
 - `GET /api/v1/auth/me` (butuh `Authorization: Bearer <access_token>`)
+- `POST /api/v1/ml/predict` (dummy prediksi + insight AI + koordinat wilayah)
 - `GET /health`
+
+Contoh body `POST /api/v1/ml/predict`:
+
+```json
+{
+  "nitrogen": 90,
+  "phosphorus": 42,
+  "potassium": 43,
+  "temperature": 25.5,
+  "humidity": 80.2,
+  "ph": 6.5,
+  "rainfall": 202.9,
+  "crop_type": "rice",
+  "kode_kabupaten_kota": 3201,
+  "nama_kabupaten_kota": "KABUPATEN BOGOR",
+  "insight_mode": "market_only"
+}
+```
 
 ## Run
 

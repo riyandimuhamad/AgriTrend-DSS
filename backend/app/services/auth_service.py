@@ -21,14 +21,32 @@ class AuthService:
                 "message": "Register berhasil. Jika token kosong, cek email verifikasi Supabase.",
             }
         except Exception as exc:
-            raise HTTPException(status_code=self._map_status(str(exc)), detail=self._clean_error(str(exc))) from exc
+            raise HTTPException(
+                status_code=self._map_status(str(exc)),
+                detail=self._clean_error(str(exc)),
+            ) from exc
+
+    def logout(self, access_token: str) -> dict[str, Any]:
+        try:
+            self.client.auth.sign_out(access_token)
+            return {"message": "Logout berhasil."}
+        except Exception as exc:
+            raise HTTPException(
+                status_code=self._map_status(str(exc)),
+                detail=self._clean_error(str(exc)),
+            ) from exc
 
     def login(self, email: str, password: str) -> dict[str, Any]:
         try:
-            # Login dengan email/password via Supabase.
-            response = self.client.auth.sign_in_with_password({"email": email, "password": password})
+            # Login with email/password via Supabase
+            response = self.client.auth.sign_in_with_password(
+                {"email": email, "password": password}
+            )
             if not response.session:
-                raise HTTPException(status_code=401, detail="Login gagal. Cek email/password atau verifikasi email.")
+                raise HTTPException(
+                    status_code=401,
+                    detail="Login gagal. Cek email/password atau verifikasi email.",
+                )
             session = response.session.model_dump()
             return {
                 "access_token": session.get("access_token"),
@@ -39,7 +57,10 @@ class AuthService:
         except HTTPException:
             raise
         except Exception as exc:
-            raise HTTPException(status_code=self._map_status(str(exc)), detail=self._clean_error(str(exc))) from exc
+            raise HTTPException(
+                status_code=self._map_status(str(exc)),
+                detail=self._clean_error(str(exc)),
+            ) from exc
 
     def get_user_from_token(self, access_token: str) -> dict[str, Any]:
         try:
@@ -51,7 +72,9 @@ class AuthService:
         except HTTPException:
             raise
         except Exception as exc:
-            raise HTTPException(status_code=401, detail=self._clean_error(str(exc))) from exc
+            raise HTTPException(
+                status_code=401, detail=self._clean_error(str(exc))
+            ) from exc
 
     @staticmethod
     def _map_status(error_text: str) -> int:

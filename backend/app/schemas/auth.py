@@ -17,3 +17,6 @@ class AuthResponse(BaseModel):
     token_type: str = "bearer"
     user: dict | None = None
     message: str
+
+class LogoutRequest(BaseModel):
+    access_token: str
