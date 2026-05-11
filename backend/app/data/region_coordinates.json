@@ -1,0 +1,47 @@
+{
+  "by_code": {
+    "3171": {
+      "latitude": -6.2088,
+      "longitude": 106.8456,
+      "region": "KOTA JAKARTA PUSAT"
+    },
+    "3201": {
+      "latitude": -6.595,
+      "longitude": 106.8166,
+      "region": "KABUPATEN BOGOR"
+    },
+    "3202": {
+      "latitude": -6.9241,
+      "longitude": 106.9222,
+      "region": "KABUPATEN SUKABUMI"
+    },
+    "3203": {
+      "latitude": -6.8166,
+      "longitude": 107.1426,
+      "region": "KABUPATEN CIANJUR"
+    },
+    "3204": {
+      "latitude": -7.0367,
+      "longitude": 107.5222,
+      "region": "KABUPATEN BANDUNG"
+    },
+    "3205": {
+      "latitude": -7.2279,
+      "longitude": 107.9087,
+      "region": "KABUPATEN GARUT"
+    }
+  },
+  "by_name": {
+    "KABUPATEN BOGOR": "3201",
+    "KABUPATEN SUKABUMI": "3202",
+    "KABUPATEN CIANJUR": "3203",
+    "KABUPATEN BANDUNG": "3204",
+    "KABUPATEN GARUT": "3205",
+    "KOTA JAKARTA PUSAT": "3171"
+  },
+  "default": {
+    "latitude": -6.2,
+    "longitude": 106.8,
+    "region": "INDONESIA (DUMMY DEFAULT)"
+  }
+}
