@@ -1,12 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { requireAuth } from "@/lib/auth-guard";
 import { DashboardShell, type Prediction } from "@/components/dashboard-shell";
 import { TrendingUp, TrendingDown, Sparkles, Leaf, AlertTriangle, BarChart3 } from "lucide-react";
 
 export const Route = createFileRoute("/analitik")({
   head: () => ({ meta: [{ title: "Analitik — Agri Trend DSS" }] }),
-  beforeLoad: requireAuth,
   component: AnalitikPage,
 });
 
@@ -14,8 +12,10 @@ function AnalitikPage() {
   const [history, setHistory] = useState<Prediction[]>([]);
 
   useEffect(() => {
-    const h = localStorage.getItem("sai_history");
-    if (h) setHistory(JSON.parse(h));
+    if (typeof window !== "undefined") {
+      const h = localStorage.getItem("sai_history");
+      if (h) setHistory(JSON.parse(h));
+    }
   }, []);
 
   const stats = useMemo(() => {

@@ -25,11 +25,9 @@ import { ApiError } from "@/components/ui/api-error";
 import { submitPrediction } from "@/lib/api/predict";
 import { saveToHistory, loadHistory } from "@/lib/api/history";
 import { useEffect, useState } from "react";
-import { requireAuth } from "@/lib/auth-guard";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Agri Trend DSS" }] }),
-  beforeLoad: requireAuth,
   component: Dashboard,
 });
 

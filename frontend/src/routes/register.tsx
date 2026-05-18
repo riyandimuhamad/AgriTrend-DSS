@@ -1,8 +1,15 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Sprout, ArrowRight, Brain, CloudSun, BarChart3 } from "lucide-react";
+import { Sprout, ArrowRight, Brain, CloudSun, BarChart3, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useState, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -22,6 +29,7 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [showErrorDialog, setShowErrorDialog] = useState(false);
 
   // Refs for Left Panel
   const logoRef = useRef<HTMLAnchorElement>(null);
@@ -101,6 +109,7 @@ function Register() {
 
     if (password !== confirmPassword) {
       setErrorMsg("Kata sandi dan konfirmasi kata sandi tidak cocok.");
+      setShowErrorDialog(true);
       return;
     }
 
@@ -127,6 +136,7 @@ function Register() {
         setErrorMsg(
           res.data.message || "Pendaftaran berhasil! Silakan cek email Anda untuk verifikasi akun.",
         );
+        setShowErrorDialog(true);
         setLoading(false);
         return;
       }
@@ -142,6 +152,7 @@ function Register() {
       } else {
         setErrorMsg("Tidak dapat terhubung ke server. Periksa koneksi Anda.");
       }
+      setShowErrorDialog(true);
       setLoading(false);
     }
   };
@@ -299,12 +310,6 @@ function Register() {
               />
             </div>
 
-            {errorMsg && (
-              <p className="rounded-xl bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
-                {errorMsg}
-              </p>
-            )}
-
             <Button
               ref={submitRef}
               style={{ opacity: 0 }}
@@ -334,6 +339,31 @@ function Register() {
           </p>
         </div>
       </div>
+
+      <Dialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>
+        <DialogContent className="sm:max-w-[420px] rounded-2xl border border-destructive/40 bg-background shadow-lg">
+          <DialogHeader>
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-destructive/15">
+                <AlertCircle className="h-5 w-5 text-destructive" />
+              </div>
+              <DialogTitle className="text-lg text-destructive">Pendaftaran Gagal</DialogTitle>
+            </div>
+          </DialogHeader>
+          <div className="mt-4 rounded-xl bg-destructive/5 p-4">
+            <p className="text-sm text-foreground">{errorMsg}</p>
+          </div>
+          <div className="mt-6 flex justify-end gap-3">
+            <Button
+              type="button"
+              onClick={() => setShowErrorDialog(false)}
+              className="rounded-full bg-destructive hover:bg-destructive/90"
+            >
+              Tutup
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
