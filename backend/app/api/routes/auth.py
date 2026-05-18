@@ -14,12 +14,22 @@ def register(payload: RegisterRequest, service: AuthService = Depends(AuthServic
 
 
 @router.post("/login", response_model=AuthResponse)
-def login(payload: LoginRequest, service: AuthService = Depends(AuthService)) -> AuthResponse:
+def login(
+    payload: LoginRequest, service: AuthService = Depends(AuthService)
+) -> AuthResponse:
     result = service.login(payload.email, payload.password)
     return AuthResponse(**result)
+
+
+@router.post("/logout", response_model=dict)
+def logout(
+    current_user: dict = Depends(get_current_user),
+    service: AuthService = Depends(AuthService),
+) -> dict:
+    service.logout(current_user["id"])
+    return {"message": "Successfully logged out"}
 
 
 @router.get("/me")
 def me(current_user: dict = Depends(get_current_user)) -> dict:
     return {"user": current_user}
-
