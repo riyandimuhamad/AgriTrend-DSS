@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
-import { requireAuth } from "@/lib/auth-guard";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,7 +23,6 @@ import { Plus, MapPin, Leaf, Droplets, Trash2, Pencil, Sprout } from "lucide-rea
 
 export const Route = createFileRoute("/lahan")({
   head: () => ({ meta: [{ title: "Lahan Saya — Agri Trend DSS" }] }),
-  beforeLoad: requireAuth,
   component: LahanPage,
 });
 
@@ -85,17 +83,21 @@ function LahanPage() {
   const [editing, setEditing] = useState<Field | null>(null);
 
   useEffect(() => {
-    const f = localStorage.getItem("sai_fields");
-    if (f) setFields(JSON.parse(f));
-    else {
-      setFields(DEFAULT_FIELDS);
-      localStorage.setItem("sai_fields", JSON.stringify(DEFAULT_FIELDS));
+    if (typeof window !== "undefined") {
+      const f = localStorage.getItem("sai_fields");
+      if (f) setFields(JSON.parse(f));
+      else {
+        setFields(DEFAULT_FIELDS);
+        localStorage.setItem("sai_fields", JSON.stringify(DEFAULT_FIELDS));
+      }
     }
   }, []);
 
   const persist = (next: Field[]) => {
     setFields(next);
-    localStorage.setItem("sai_fields", JSON.stringify(next));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("sai_fields", JSON.stringify(next));
+    }
   };
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {

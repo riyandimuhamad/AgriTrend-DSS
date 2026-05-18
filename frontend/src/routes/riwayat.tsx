@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { requireAuth } from "@/lib/auth-guard";
 import { DashboardShell, STATUS_CONF, type Prediction } from "@/components/dashboard-shell";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,7 +14,6 @@ import { Search, Download, MapPin, Calendar, Trash2, History as HistoryIcon } fr
 
 export const Route = createFileRoute("/riwayat")({
   head: () => ({ meta: [{ title: "Riwayat — Agri Trend DSS" }] }),
-  beforeLoad: requireAuth,
   component: RiwayatPage,
 });
 
@@ -25,8 +23,10 @@ function RiwayatPage() {
   const [filter, setFilter] = useState<string>("ALL");
 
   useEffect(() => {
-    const h = localStorage.getItem("sai_history");
-    if (h) setHistory(JSON.parse(h));
+    if (typeof window !== "undefined") {
+      const h = localStorage.getItem("sai_history");
+      if (h) setHistory(JSON.parse(h));
+    }
   }, []);
 
   const filtered = useMemo(() => {

@@ -7,13 +7,14 @@ from app.core.exceptions import register_exception_handlers
 
 app = FastAPI(title=settings.app_name, version=settings.app_version)
 
-# CORS Handler 
+# CORS Handler
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # add global handler error response
