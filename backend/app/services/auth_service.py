@@ -26,19 +26,9 @@ class AuthService:
                 detail=self._clean_error(str(exc)),
             ) from exc
 
-    def logout(self, access_token: str) -> dict[str, Any]:
-        try:
-            self.client.auth.sign_out(access_token)
-            return {"message": "Logout berhasil."}
-        except Exception as exc:
-            raise HTTPException(
-                status_code=self._map_status(str(exc)),
-                detail=self._clean_error(str(exc)),
-            ) from exc
-
     def login(self, email: str, password: str) -> dict[str, Any]:
         try:
-            # Login with email/password via Supabase
+            # Login dengan email/password via Supabase.
             response = self.client.auth.sign_in_with_password(
                 {"email": email, "password": password}
             )
