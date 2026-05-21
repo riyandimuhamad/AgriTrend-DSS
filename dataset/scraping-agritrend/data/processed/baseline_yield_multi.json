@@ -1,0 +1,326 @@
+{
+  "Kab. Bandung|Jagung": {
+    "nama_kabupaten": "Kab. Bandung",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 5.734,
+    "std_yield_ton_ha": 0.168,
+    "threshold_berlimpah": 6.881,
+    "threshold_normal_lower": 4.587,
+    "n_tahun": 10
+  },
+  "Kab. Bandung|Padi": {
+    "nama_kabupaten": "Kab. Bandung",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.432,
+    "std_yield_ton_ha": 0.035,
+    "threshold_berlimpah": 6.518,
+    "threshold_normal_lower": 4.346,
+    "n_tahun": 10
+  },
+  "Kab. Bandung Barat|Jagung": {
+    "nama_kabupaten": "Kab. Bandung Barat",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 5.994,
+    "std_yield_ton_ha": 0.169,
+    "threshold_berlimpah": 7.193,
+    "threshold_normal_lower": 4.795,
+    "n_tahun": 10
+  },
+  "Kab. Bandung Barat|Padi": {
+    "nama_kabupaten": "Kab. Bandung Barat",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.466,
+    "std_yield_ton_ha": 0.017,
+    "threshold_berlimpah": 6.559,
+    "threshold_normal_lower": 4.373,
+    "n_tahun": 10
+  },
+  "Kab. Bekasi|Jagung": {
+    "nama_kabupaten": "Kab. Bekasi",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 5.991,
+    "std_yield_ton_ha": 0.172,
+    "threshold_berlimpah": 7.189,
+    "threshold_normal_lower": 4.793,
+    "n_tahun": 10
+  },
+  "Kab. Bekasi|Padi": {
+    "nama_kabupaten": "Kab. Bekasi",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.61,
+    "std_yield_ton_ha": 0.021,
+    "threshold_berlimpah": 6.732,
+    "threshold_normal_lower": 4.488,
+    "n_tahun": 10
+  },
+  "Kab. Bogor|Jagung": {
+    "nama_kabupaten": "Kab. Bogor",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 6.112,
+    "std_yield_ton_ha": 0.159,
+    "threshold_berlimpah": 7.334,
+    "threshold_normal_lower": 4.89,
+    "n_tahun": 10
+  },
+  "Kab. Bogor|Padi": {
+    "nama_kabupaten": "Kab. Bogor",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.11,
+    "std_yield_ton_ha": 0.031,
+    "threshold_berlimpah": 6.132,
+    "threshold_normal_lower": 4.088,
+    "n_tahun": 10
+  },
+  "Kab. Ciamis|Jagung": {
+    "nama_kabupaten": "Kab. Ciamis",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 5.898,
+    "std_yield_ton_ha": 0.167,
+    "threshold_berlimpah": 7.078,
+    "threshold_normal_lower": 4.718,
+    "n_tahun": 10
+  },
+  "Kab. Ciamis|Padi": {
+    "nama_kabupaten": "Kab. Ciamis",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.39,
+    "std_yield_ton_ha": 0.021,
+    "threshold_berlimpah": 6.468,
+    "threshold_normal_lower": 4.312,
+    "n_tahun": 10
+  },
+  "Kab. Cianjur|Jagung": {
+    "nama_kabupaten": "Kab. Cianjur",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 6.178,
+    "std_yield_ton_ha": 0.119,
+    "threshold_berlimpah": 7.414,
+    "threshold_normal_lower": 4.942,
+    "n_tahun": 10
+  },
+  "Kab. Cianjur|Padi": {
+    "nama_kabupaten": "Kab. Cianjur",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.294,
+    "std_yield_ton_ha": 0.037,
+    "threshold_berlimpah": 6.353,
+    "threshold_normal_lower": 4.235,
+    "n_tahun": 10
+  },
+  "Kab. Cirebon|Jagung": {
+    "nama_kabupaten": "Kab. Cirebon",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 5.956,
+    "std_yield_ton_ha": 0.141,
+    "threshold_berlimpah": 7.147,
+    "threshold_normal_lower": 4.765,
+    "n_tahun": 10
+  },
+  "Kab. Cirebon|Padi": {
+    "nama_kabupaten": "Kab. Cirebon",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.588,
+    "std_yield_ton_ha": 0.009,
+    "threshold_berlimpah": 6.706,
+    "threshold_normal_lower": 4.47,
+    "n_tahun": 10
+  },
+  "Kab. Garut|Jagung": {
+    "nama_kabupaten": "Kab. Garut",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 6.288,
+    "std_yield_ton_ha": 0.158,
+    "threshold_berlimpah": 7.546,
+    "threshold_normal_lower": 5.03,
+    "n_tahun": 10
+  },
+  "Kab. Garut|Padi": {
+    "nama_kabupaten": "Kab. Garut",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.293,
+    "std_yield_ton_ha": 0.014,
+    "threshold_berlimpah": 6.352,
+    "threshold_normal_lower": 4.234,
+    "n_tahun": 10
+  },
+  "Kab. Indramayu|Jagung": {
+    "nama_kabupaten": "Kab. Indramayu",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 5.668,
+    "std_yield_ton_ha": 0.144,
+    "threshold_berlimpah": 6.802,
+    "threshold_normal_lower": 4.534,
+    "n_tahun": 10
+  },
+  "Kab. Indramayu|Padi": {
+    "nama_kabupaten": "Kab. Indramayu",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.771,
+    "std_yield_ton_ha": 0.044,
+    "threshold_berlimpah": 6.925,
+    "threshold_normal_lower": 4.617,
+    "n_tahun": 10
+  },
+  "Kab. Karawang|Jagung": {
+    "nama_kabupaten": "Kab. Karawang",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 5.975,
+    "std_yield_ton_ha": 0.165,
+    "threshold_berlimpah": 7.17,
+    "threshold_normal_lower": 4.78,
+    "n_tahun": 10
+  },
+  "Kab. Karawang|Padi": {
+    "nama_kabupaten": "Kab. Karawang",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.853,
+    "std_yield_ton_ha": 0.005,
+    "threshold_berlimpah": 7.024,
+    "threshold_normal_lower": 4.682,
+    "n_tahun": 10
+  },
+  "Kab. Kuningan|Jagung": {
+    "nama_kabupaten": "Kab. Kuningan",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 5.884,
+    "std_yield_ton_ha": 0.163,
+    "threshold_berlimpah": 7.061,
+    "threshold_normal_lower": 4.707,
+    "n_tahun": 10
+  },
+  "Kab. Kuningan|Padi": {
+    "nama_kabupaten": "Kab. Kuningan",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.473,
+    "std_yield_ton_ha": 0.025,
+    "threshold_berlimpah": 6.568,
+    "threshold_normal_lower": 4.378,
+    "n_tahun": 10
+  },
+  "Kab. Majalengka|Jagung": {
+    "nama_kabupaten": "Kab. Majalengka",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 6.061,
+    "std_yield_ton_ha": 0.144,
+    "threshold_berlimpah": 7.273,
+    "threshold_normal_lower": 4.849,
+    "n_tahun": 10
+  },
+  "Kab. Majalengka|Padi": {
+    "nama_kabupaten": "Kab. Majalengka",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.574,
+    "std_yield_ton_ha": 0.024,
+    "threshold_berlimpah": 6.689,
+    "threshold_normal_lower": 4.459,
+    "n_tahun": 10
+  },
+  "Kab. Pangandaran|Jagung": {
+    "nama_kabupaten": "Kab. Pangandaran",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 5.876,
+    "std_yield_ton_ha": 0.16,
+    "threshold_berlimpah": 7.051,
+    "threshold_normal_lower": 4.701,
+    "n_tahun": 10
+  },
+  "Kab. Pangandaran|Padi": {
+    "nama_kabupaten": "Kab. Pangandaran",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.365,
+    "std_yield_ton_ha": 0.026,
+    "threshold_berlimpah": 6.438,
+    "threshold_normal_lower": 4.292,
+    "n_tahun": 10
+  },
+  "Kab. Purwakarta|Jagung": {
+    "nama_kabupaten": "Kab. Purwakarta",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 5.795,
+    "std_yield_ton_ha": 0.164,
+    "threshold_berlimpah": 6.954,
+    "threshold_normal_lower": 4.636,
+    "n_tahun": 10
+  },
+  "Kab. Purwakarta|Padi": {
+    "nama_kabupaten": "Kab. Purwakarta",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.227,
+    "std_yield_ton_ha": 0.018,
+    "threshold_berlimpah": 6.272,
+    "threshold_normal_lower": 4.182,
+    "n_tahun": 10
+  },
+  "Kab. Subang|Jagung": {
+    "nama_kabupaten": "Kab. Subang",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 6.075,
+    "std_yield_ton_ha": 0.143,
+    "threshold_berlimpah": 7.29,
+    "threshold_normal_lower": 4.86,
+    "n_tahun": 10
+  },
+  "Kab. Subang|Padi": {
+    "nama_kabupaten": "Kab. Subang",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.872,
+    "std_yield_ton_ha": 0.006,
+    "threshold_berlimpah": 7.046,
+    "threshold_normal_lower": 4.698,
+    "n_tahun": 10
+  },
+  "Kab. Sukabumi|Jagung": {
+    "nama_kabupaten": "Kab. Sukabumi",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 5.865,
+    "std_yield_ton_ha": 0.109,
+    "threshold_berlimpah": 7.038,
+    "threshold_normal_lower": 4.692,
+    "n_tahun": 10
+  },
+  "Kab. Sukabumi|Padi": {
+    "nama_kabupaten": "Kab. Sukabumi",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.016,
+    "std_yield_ton_ha": 0.022,
+    "threshold_berlimpah": 6.019,
+    "threshold_normal_lower": 4.013,
+    "n_tahun": 10
+  },
+  "Kab. Sumedang|Jagung": {
+    "nama_kabupaten": "Kab. Sumedang",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 5.921,
+    "std_yield_ton_ha": 0.155,
+    "threshold_berlimpah": 7.105,
+    "threshold_normal_lower": 4.737,
+    "n_tahun": 10
+  },
+  "Kab. Sumedang|Padi": {
+    "nama_kabupaten": "Kab. Sumedang",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.46,
+    "std_yield_ton_ha": 0.022,
+    "threshold_berlimpah": 6.552,
+    "threshold_normal_lower": 4.368,
+    "n_tahun": 10
+  },
+  "Kab. Tasikmalaya|Jagung": {
+    "nama_kabupaten": "Kab. Tasikmalaya",
+    "tanaman": "Jagung",
+    "mean_yield_ton_ha": 6.117,
+    "std_yield_ton_ha": 0.126,
+    "threshold_berlimpah": 7.34,
+    "threshold_normal_lower": 4.894,
+    "n_tahun": 10
+  },
+  "Kab. Tasikmalaya|Padi": {
+    "nama_kabupaten": "Kab. Tasikmalaya",
+    "tanaman": "Padi",
+    "mean_yield_ton_ha": 5.302,
+    "std_yield_ton_ha": 0.023,
+    "threshold_berlimpah": 6.362,
+    "threshold_normal_lower": 4.242,
+    "n_tahun": 10
+  }
+}

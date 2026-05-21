@@ -1,0 +1,19 @@
+nama_kabupaten,latitude,longitude,ph_h2o,nitrogen_cn_kg,clay_pct,sand_pct,silt_pct,soc_dg_kg,cec_mmol_kg,bulk_density,soil_type,kesesuaian_padi,texture_class,fertility_index,whc_proxy,ph_status
+Kab. Bogor,-6.5971,106.806,5.4,148,42.0,28.0,30.0,18.5,195,1.21,Latosol,S2,clay,6.43,22.8,masam
+Kab. Sukabumi,-7.0051,106.9264,5.2,132,38.0,32.0,30.0,16.2,178,1.24,Latosol,S2,clay_loam,5.53,21.2,masam
+Kab. Cianjur,-6.82,107.14,5.6,155,40.0,25.0,35.0,20.1,210,1.18,Andosol,S1,clay,7.1,23.0,optimal
+Kab. Bandung,-7.04,107.59,5.8,162,35.0,28.0,37.0,22.3,225,1.15,Andosol,S1,clay_loam,7.84,21.4,optimal
+Kab. Garut,-7.23,107.9,5.5,145,44.0,22.0,34.0,19.8,205,1.19,Latosol,S2,clay,6.72,24.4,optimal
+Kab. Tasikmalaya,-7.35,108.25,5.7,158,36.0,30.0,34.0,21.0,215,1.17,Andosol,S1,clay_loam,7.43,21.2,optimal
+Kab. Indramayu,-6.33,108.32,6.8,98,48.0,18.0,34.0,12.5,165,1.28,Aluvial,S1,clay,6.13,26.0,optimal
+Kab. Subang,-6.57,107.76,6.5,108,45.0,20.0,35.0,14.2,175,1.25,Aluvial,S1,clay,7.03,25.0,optimal
+Kab. Karawang,-6.32,107.34,6.6,105,46.0,19.0,35.0,13.8,172,1.26,Aluvial,S1,clay,6.76,25.4,optimal
+Kab. Majalengka,-6.84,108.23,6.2,125,40.0,25.0,35.0,15.5,185,1.22,Latosol,S2,clay,6.98,23.0,optimal
+Kab. Cirebon,-6.76,108.55,6.9,95,44.0,22.0,34.0,11.8,158,1.3,Aluvial,S2,clay,5.82,24.4,optimal
+Kab. Purwakarta,-6.55,107.44,5.5,138,38.0,30.0,32.0,17.2,190,1.23,Latosol,S2,clay_loam,6.26,21.6,optimal
+Kab. Ciamis,-7.33,108.35,5.9,150,37.0,28.0,35.0,19.5,208,1.2,Latosol,S2,clay_loam,7.43,21.8,optimal
+Kab. Kuningan,-6.98,108.48,5.8,152,36.0,30.0,34.0,20.5,212,1.18,Andosol,S1,clay_loam,7.43,21.2,optimal
+Kab. Sumedang,-6.85,107.92,5.6,148,39.0,27.0,34.0,18.8,200,1.21,Latosol,S2,clay_loam,6.81,22.4,optimal
+Kab. Bekasi,-6.37,107.14,6.4,102,46.0,20.0,34.0,13.0,168,1.27,Aluvial,S2,clay,6.6,25.2,optimal
+Kab. Bandung Barat,-6.84,107.45,5.7,155,37.0,28.0,35.0,21.5,218,1.16,Andosol,S1,clay_loam,7.45,21.8,optimal
+Kab. Pangandaran,-7.68,108.65,6.0,128,38.0,30.0,32.0,16.8,185,1.22,Latosol,S2,clay_loam,6.87,21.6,optimal

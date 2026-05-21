@@ -1,0 +1,326 @@
+{
+  "Kab. Bandung": {
+    "mean_yield_ton_ha": 5.464,
+    "std_yield_ton_ha": 0.015,
+    "min_yield_ton_ha": 5.44,
+    "max_yield_ton_ha": 5.48,
+    "threshold_berlimpah": 6.557,
+    "threshold_normal_lower": 4.371,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  },
+  "Kab. Bandung Barat": {
+    "mean_yield_ton_ha": 5.482,
+    "std_yield_ton_ha": 0.004,
+    "min_yield_ton_ha": 5.48,
+    "max_yield_ton_ha": 5.49,
+    "threshold_berlimpah": 6.578,
+    "threshold_normal_lower": 4.386,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  },
+  "Kab. Bekasi": {
+    "mean_yield_ton_ha": 5.63,
+    "std_yield_ton_ha": 0.0,
+    "min_yield_ton_ha": 5.63,
+    "max_yield_ton_ha": 5.63,
+    "threshold_berlimpah": 6.756,
+    "threshold_normal_lower": 4.504,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  },
+  "Kab. Bogor": {
+    "mean_yield_ton_ha": 5.138,
+    "std_yield_ton_ha": 0.013,
+    "min_yield_ton_ha": 5.12,
+    "max_yield_ton_ha": 5.15,
+    "threshold_berlimpah": 6.166,
+    "threshold_normal_lower": 4.11,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  },
+  "Kab. Ciamis": {
+    "mean_yield_ton_ha": 5.41,
+    "std_yield_ton_ha": 0.0,
+    "min_yield_ton_ha": 5.41,
+    "max_yield_ton_ha": 5.41,
+    "threshold_berlimpah": 6.492,
+    "threshold_normal_lower": 4.328,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  },
+  "Kab. Cianjur": {
+    "mean_yield_ton_ha": 5.328,
+    "std_yield_ton_ha": 0.011,
+    "min_yield_ton_ha": 5.31,
+    "max_yield_ton_ha": 5.34,
+    "threshold_berlimpah": 6.394,
+    "threshold_normal_lower": 4.262,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  },
+  "Kab. Cirebon": {
+    "mean_yield_ton_ha": 5.596,
+    "std_yield_ton_ha": 0.005,
+    "min_yield_ton_ha": 5.59,
+    "max_yield_ton_ha": 5.6,
+    "threshold_berlimpah": 6.715,
+    "threshold_normal_lower": 4.477,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  },
+  "Kab. Garut": {
+    "mean_yield_ton_ha": 5.306,
+    "std_yield_ton_ha": 0.005,
+    "min_yield_ton_ha": 5.3,
+    "max_yield_ton_ha": 5.31,
+    "threshold_berlimpah": 6.367,
+    "threshold_normal_lower": 4.245,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  },
+  "Kab. Indramayu": {
+    "mean_yield_ton_ha": 5.812,
+    "std_yield_ton_ha": 0.011,
+    "min_yield_ton_ha": 5.8,
+    "max_yield_ton_ha": 5.82,
+    "threshold_berlimpah": 6.974,
+    "threshold_normal_lower": 4.65,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  },
+  "Kab. Karawang": {
+    "mean_yield_ton_ha": 5.856,
+    "std_yield_ton_ha": 0.005,
+    "min_yield_ton_ha": 5.85,
+    "max_yield_ton_ha": 5.86,
+    "threshold_berlimpah": 7.027,
+    "threshold_normal_lower": 4.685,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  },
+  "Kab. Kuningan": {
+    "mean_yield_ton_ha": 5.496,
+    "std_yield_ton_ha": 0.005,
+    "min_yield_ton_ha": 5.49,
+    "max_yield_ton_ha": 5.5,
+    "threshold_berlimpah": 6.595,
+    "threshold_normal_lower": 4.397,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  },
+  "Kab. Majalengka": {
+    "mean_yield_ton_ha": 5.596,
+    "std_yield_ton_ha": 0.005,
+    "min_yield_ton_ha": 5.59,
+    "max_yield_ton_ha": 5.6,
+    "threshold_berlimpah": 6.715,
+    "threshold_normal_lower": 4.477,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  },
+  "Kab. Pangandaran": {
+    "mean_yield_ton_ha": 5.39,
+    "std_yield_ton_ha": 0.0,
+    "min_yield_ton_ha": 5.39,
+    "max_yield_ton_ha": 5.39,
+    "threshold_berlimpah": 6.468,
+    "threshold_normal_lower": 4.312,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  },
+  "Kab. Purwakarta": {
+    "mean_yield_ton_ha": 5.244,
+    "std_yield_ton_ha": 0.005,
+    "min_yield_ton_ha": 5.24,
+    "max_yield_ton_ha": 5.25,
+    "threshold_berlimpah": 6.293,
+    "threshold_normal_lower": 4.195,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  },
+  "Kab. Subang": {
+    "mean_yield_ton_ha": 5.874,
+    "std_yield_ton_ha": 0.009,
+    "min_yield_ton_ha": 5.86,
+    "max_yield_ton_ha": 5.88,
+    "threshold_berlimpah": 7.049,
+    "threshold_normal_lower": 4.699,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  },
+  "Kab. Sukabumi": {
+    "mean_yield_ton_ha": 5.034,
+    "std_yield_ton_ha": 0.015,
+    "min_yield_ton_ha": 5.01,
+    "max_yield_ton_ha": 5.05,
+    "threshold_berlimpah": 6.041,
+    "threshold_normal_lower": 4.027,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  },
+  "Kab. Sumedang": {
+    "mean_yield_ton_ha": 5.48,
+    "std_yield_ton_ha": 0.007,
+    "min_yield_ton_ha": 5.47,
+    "max_yield_ton_ha": 5.49,
+    "threshold_berlimpah": 6.576,
+    "threshold_normal_lower": 4.384,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  },
+  "Kab. Tasikmalaya": {
+    "mean_yield_ton_ha": 5.324,
+    "std_yield_ton_ha": 0.005,
+    "min_yield_ton_ha": 5.32,
+    "max_yield_ton_ha": 5.33,
+    "threshold_berlimpah": 6.389,
+    "threshold_normal_lower": 4.259,
+    "n_years": 5,
+    "years_covered": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "tanaman": "Padi",
+    "satuan": "ton/ha"
+  }
+}
