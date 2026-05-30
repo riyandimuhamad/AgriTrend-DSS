@@ -1,15 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  Sparkles,
-  Brain,
-  CloudSun,
-  Leaf,
-  MapPin,
-  TrendingUp,
-  Droplets,
-  Thermometer,
-  FlaskConical,
-} from "lucide-react";
+import { Sparkles, Brain, CloudSun, Leaf, MapPin, TrendingUp, Calendar } from "lucide-react";
 import { DashboardShell, type Prediction, STATUS_CONF } from "@/components/dashboard-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +20,8 @@ export const Route = createFileRoute("/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Agri Trend DSS" }] }),
   component: Dashboard,
 });
+
+// ─── Helper ──────────────────────────────────────────────────────────────────
 
 function marketTrendToStatus(trend: string): Prediction["status"] {
   if (trend.includes("naik") || trend.includes("berlimpah")) return "BERLIMPAH";
@@ -61,25 +53,20 @@ function extractAdvice(insightStructured: Record<string, unknown>, insightRaw: s
   }
 }
 
+// ─── Komponen utama ───────────────────────────────────────────────────────────
+
 function Dashboard() {
   const [history, setHistory] = useState<Prediction[]>([]);
   const [current, setCurrent] = useState<Prediction | null>(null);
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  // form state — sesuai PredictionRequest schema backend
-  const [nitrogen, setNitrogen] = useState("50");
-  const [phosphorus, setPhosphorus] = useState("30");
-  const [potassium, setPotassium] = useState("40");
-  const [temperature, setTemperature] = useState("28");
-  const [humidity, setHumidity] = useState("76");
-  const [ph, setPh] = useState("6.5");
-  const [rainfall, setRainfall] = useState("200");
-  const [cropType, setCropType] = useState("padi");
+  // 4 field form — sesuai kebutuhan backend
   const [location, setLocation] = useState("");
-  const [area, setArea] = useState("2.5");
-  const [insightMode, setInsightMode] = useState<"market_only" | "agronomy_plus_market">(
-    "agronomy_plus_market",
+  const [cropType, setCropType] = useState("padi");
+  const [landArea, setLandArea] = useState("2.5");
+  const [plantingDate, setPlantingDate] = useState(
+    () => new Date().toISOString().slice(0, 10), // default: hari ini
   );
 
   useEffect(() => {
@@ -94,16 +81,10 @@ function Dashboard() {
 
     try {
       const data = await submitPrediction({
-        nitrogen: parseFloat(nitrogen),
-        phosphorus: parseFloat(phosphorus),
-        potassium: parseFloat(potassium),
-        temperature: parseFloat(temperature),
-        humidity: parseFloat(humidity),
-        ph: parseFloat(ph),
-        rainfall: parseFloat(rainfall),
+        location: location.trim(),
         crop_type: cropType,
-        nama_kabupaten_kota: location.trim() || null,
-        insight_mode: insightMode,
+        land_area: parseFloat(landArea),
+        planting_date: plantingDate,
       });
 
       const yieldVal = data.prediction.predicted_yield_ton_per_ha;
@@ -115,11 +96,11 @@ function Dashboard() {
         id: crypto.randomUUID(),
         location: region,
         crop: cropType,
-        area: parseFloat(area),
+        area: parseFloat(landArea),
         date: new Date().toISOString().slice(0, 10),
         yield: parseFloat(yieldVal.toFixed(2)),
         status,
-        confidence: 85,
+        confidence: data.prediction.confidence ?? 85,
         advice,
       };
 
@@ -138,21 +119,40 @@ function Dashboard() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight">Prediksi Panen Baru</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Masukkan data lahan dan kondisi lingkungan — model ML akan menghitung estimasi panen Anda.
+          Masukkan data lahan — sistem akan mengambil data cuaca dan tanah secara otomatis.
         </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-5">
-        {/* Form */}
+        {/* ── Form ─────────────────────────────────────────────────────── */}
         <div className="lg:col-span-2">
           <form
             onSubmit={onSubmit}
             className="rounded-3xl border border-border/60 bg-card p-6 shadow-[var(--shadow-soft)]"
           >
-            <h2 className="text-lg font-semibold">Data Lahan & Lingkungan</h2>
+            <h2 className="text-lg font-semibold">Data Lahan</h2>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Data cuaca dan kondisi tanah diambil otomatis berdasarkan lokasi Anda.
+            </p>
 
-            {/* Jenis tanaman + lokasi */}
             <div className="mt-5 space-y-4">
+              {/* Lokasi */}
+              <div className="space-y-2">
+                <Label htmlFor="loc">
+                  <MapPin className="mr-1 inline h-3.5 w-3.5" />
+                  Lokasi Lahan
+                </Label>
+                <Input
+                  id="loc"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder="Contoh: Subang, Jawa Barat"
+                  required
+                  className="h-11 rounded-xl"
+                />
+              </div>
+
+              {/* Jenis tanaman */}
               <div className="space-y-2">
                 <Label htmlFor="crop">
                   <Leaf className="mr-1 inline h-3.5 w-3.5" />
@@ -165,128 +165,40 @@ function Dashboard() {
                   <SelectContent>
                     <SelectItem value="padi">Padi</SelectItem>
                     <SelectItem value="jagung">Jagung</SelectItem>
-                    <SelectItem value="kedelai">Kedelai</SelectItem>
-                    <SelectItem value="cabai">Cabai</SelectItem>
-                    <SelectItem value="kopi">Kopi</SelectItem>
-                    <SelectItem value="tebu">Tebu</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
+              {/* Luas lahan */}
               <div className="space-y-2">
-                <Label htmlFor="loc">
-                  <MapPin className="mr-1 inline h-3.5 w-3.5" />
-                  Lokasi (Opsional)
-                </Label>
-                <Input
-                  id="loc"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="Contoh: Sleman"
-                  className="h-11 rounded-xl"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="area">Luas Lahan (ha)</Label>
+                <Label htmlFor="area">Luas Lahan (hektar)</Label>
                 <Input
                   id="area"
                   type="number"
                   step="0.1"
                   min="0.1"
-                  value={area}
-                  onChange={(e) => setArea(e.target.value)}
+                  max="100"
+                  value={landArea}
+                  onChange={(e) => setLandArea(e.target.value)}
                   required
                   className="h-11 rounded-xl"
                 />
               </div>
-            </div>
 
-            {/* Nutrisi tanah */}
-            <p className="mt-5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Nutrisi Tanah (mg/kg)
-            </p>
-            <div className="mt-2 grid grid-cols-3 gap-3">
-              {[
-                { id: "n", label: "N", val: nitrogen, set: setNitrogen },
-                { id: "p", label: "P", val: phosphorus, set: setPhosphorus },
-                { id: "k", label: "K", val: potassium, set: setPotassium },
-              ].map(({ id, label, val, set }) => (
-                <div key={id} className="space-y-1.5">
-                  <Label htmlFor={id} className="text-xs">
-                    {label}
-                  </Label>
-                  <Input
-                    id={id}
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    value={val}
-                    onChange={(e) => set(e.target.value)}
-                    required
-                    className="h-10 rounded-xl text-sm"
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* Iklim */}
-            <p className="mt-5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Kondisi Iklim
-            </p>
-            <div className="mt-2 grid grid-cols-3 gap-3">
-              {[
-                { id: "temp", label: "Suhu (°C)", val: temperature, set: setTemperature },
-                { id: "hum", label: "Lembab (%)", val: humidity, set: setHumidity },
-                { id: "rain", label: "Hujan (mm)", val: rainfall, set: setRainfall },
-              ].map(({ id, label, val, set }) => (
-                <div key={id} className="space-y-1.5">
-                  <Label htmlFor={id} className="text-xs">
-                    {label}
-                  </Label>
-                  <Input
-                    id={id}
-                    type="number"
-                    step="0.1"
-                    value={val}
-                    onChange={(e) => set(e.target.value)}
-                    required
-                    className="h-10 rounded-xl text-sm"
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* pH + insight mode */}
-            <div className="mt-4 grid grid-cols-2 gap-3">
+              {/* Tanggal tanam */}
               <div className="space-y-2">
-                <Label htmlFor="ph">pH Tanah (0–14)</Label>
+                <Label htmlFor="planting-date">
+                  <Calendar className="mr-1 inline h-3.5 w-3.5" />
+                  Tanggal Mulai Tanam
+                </Label>
                 <Input
-                  id="ph"
-                  type="number"
-                  step="0.1"
-                  min="0"
-                  max="14"
-                  value={ph}
-                  onChange={(e) => setPh(e.target.value)}
+                  id="planting-date"
+                  type="date"
+                  value={plantingDate}
+                  onChange={(e) => setPlantingDate(e.target.value)}
                   required
                   className="h-11 rounded-xl"
                 />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="insight">Mode Insight</Label>
-                <Select
-                  value={insightMode}
-                  onValueChange={(v) => setInsightMode(v as typeof insightMode)}
-                >
-                  <SelectTrigger id="insight" className="h-11 rounded-xl">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="agronomy_plus_market">Agronomi + Pasar</SelectItem>
-                    <SelectItem value="market_only">Pasar Saja</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
             </div>
 
@@ -305,23 +217,17 @@ function Dashboard() {
             </Button>
           </form>
 
-          {/* Live data preview */}
-          <div className="mt-6 grid grid-cols-3 gap-3">
-            {[
-              { i: CloudSun, l: "Suhu", v: `${temperature}°C` },
-              { i: Droplets, l: "Lembab", v: `${humidity}%` },
-              { i: Thermometer, l: "pH Tanah", v: ph },
-            ].map((s) => (
-              <div key={s.l} className="rounded-2xl border border-border/60 bg-card p-4">
-                <s.i className="h-4 w-4 text-primary" />
-                <div className="mt-2 text-xs text-muted-foreground">{s.l}</div>
-                <div className="text-sm font-semibold">{s.v}</div>
-              </div>
-            ))}
+          {/* Info otomatis */}
+          <div className="mt-4 rounded-2xl border border-border/60 bg-muted/30 p-4">
+            <p className="text-xs text-muted-foreground">
+              <span className="font-semibold text-foreground">Data yang diambil otomatis:</span>{" "}
+              Cuaca dari Open-Meteo, kondisi tanah dari database Jawa Barat, dan baseline panen dari
+              BPS.
+            </p>
           </div>
         </div>
 
-        {/* Result */}
+        {/* ── Hasil ────────────────────────────────────────────────────── */}
         <div className="lg:col-span-3">
           {apiError && (
             <div className="mb-4">
@@ -332,6 +238,7 @@ function Dashboard() {
           {!loading && !current && !apiError && <EmptyState />}
           {!loading && current && <ResultCard pred={current} />}
 
+          {/* Riwayat */}
           {history.length > 0 && (
             <div className="mt-6 rounded-3xl border border-border/60 bg-card p-6">
               <div className="flex items-center justify-between">
@@ -374,6 +281,8 @@ function Dashboard() {
   );
 }
 
+// ─── Sub-komponen ─────────────────────────────────────────────────────────────
+
 function EmptyState() {
   return (
     <div className="flex h-full min-h-[400px] flex-col items-center justify-center rounded-3xl border border-dashed border-border bg-card p-10 text-center">
@@ -407,7 +316,7 @@ function SkeletonResult() {
       </div>
       <div className="mt-6 h-24 animate-pulse rounded-2xl bg-muted" />
       <p className="mt-4 text-center text-sm text-muted-foreground">
-        Menarik data cuaca, tanah, & menjalankan model ML...
+        Menarik data cuaca & tanah, menjalankan model ML...
       </p>
     </div>
   );
@@ -416,6 +325,7 @@ function SkeletonResult() {
 function ResultCard({ pred }: { pred: Prediction }) {
   const conf = STATUS_CONF[pred.status];
   const total = (pred.yield * pred.area).toFixed(1);
+
   return (
     <div className="rounded-3xl border border-border/60 bg-[image:var(--gradient-card)] p-8 shadow-[var(--shadow-elegant)]">
       <div className="flex items-start justify-between gap-4">
@@ -434,6 +344,7 @@ function ResultCard({ pred }: { pred: Prediction }) {
         </span>
       </div>
 
+      {/* Angka utama */}
       <div className="mt-8 flex items-end gap-6">
         <div>
           <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -450,6 +361,7 @@ function ResultCard({ pred }: { pred: Prediction }) {
         </div>
       </div>
 
+      {/* Confidence bar */}
       <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
         <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
           <div
@@ -461,11 +373,12 @@ function ResultCard({ pred }: { pred: Prediction }) {
         <span>confidence</span>
       </div>
 
+      {/* 3 kartu ringkasan */}
       <div className="mt-6 grid grid-cols-3 gap-3">
         {[
-          { i: CloudSun, l: "Cuaca", v: "Optimal" },
-          { i: FlaskConical, l: "Nutrisi", v: "Teranalisa" },
+          { i: CloudSun, l: "Cuaca", v: "Otomatis" },
           { i: TrendingUp, l: "Tren Pasar", v: "Diprediksi" },
+          { i: Brain, l: "AI Insight", v: "Aktif" },
         ].map((s) => (
           <div key={s.l} className="rounded-2xl bg-muted/40 p-3">
             <s.i className="h-4 w-4 text-primary" />
@@ -475,6 +388,7 @@ function ResultCard({ pred }: { pred: Prediction }) {
         ))}
       </div>
 
+      {/* Saran AI */}
       <div className="mt-6 rounded-2xl border border-primary/20 bg-primary/5 p-5">
         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary">
           <Brain className="h-3.5 w-3.5" /> Saran AI
