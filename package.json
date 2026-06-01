@@ -4,7 +4,9 @@
   "description": "Agri-Trend DSS: Sistem Pendukung Keputusan berbasis Machine Learning dan Generative AI untuk prediksi hasil panen dan wawasan pasar petani lokal.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "setup": "node setup.js all",
+    "install:all": "node setup.js install",
+    "dev": "node setup.js dev"
   },
   "repository": {
     "type": "git",
