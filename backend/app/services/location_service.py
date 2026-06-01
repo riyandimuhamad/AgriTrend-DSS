@@ -1,49 +1,33 @@
 import json
+import re
 from pathlib import Path
 from typing import Any
-
-from app.schemas.prediction import Coordinates
 
 
 class LocationService:
     def __init__(self) -> None:
-        base_dir = Path(__file__).resolve().parents[1]
-        dataset_path = base_dir / "data" / "region_coordinates.json"
-        self._dataset = self._load_dataset(dataset_path)
+        path = Path(__file__).resolve().parents[1] / "data" / "region_coordinates.json"
+        with path.open(encoding="utf-8") as f:
+            data = json.load(f)
+        self._by_name: dict[str, dict] = data["by_name"]
+        self._default: dict = data["default"]
 
-    def resolve_coordinates(
-        self,
-        kode_kabupaten_kota: int | None = None,
-        nama_kabupaten_kota: str | None = None,
-    ) -> Coordinates:
-        by_code = self._dataset.get("by_code", {})
-        by_name = self._dataset.get("by_name", {})
+    def resolve_by_name(self, location: str) -> dict[str, Any]:
 
-        if kode_kabupaten_kota is not None:
-            row = by_code.get(str(kode_kabupaten_kota))
-            if row:
-                return Coordinates(**row)
+        # Exact match (uppercase)
+        key = location.strip().upper()
+        if key in self._by_name:
+            return self._by_name[key]
 
-        if nama_kabupaten_kota:
-            key = nama_kabupaten_kota.strip().upper()
-            code = by_name.get(key)
-            if code and code in by_code:
-                return Coordinates(**by_code[code])
+        # Try with 'KABUPATEN' prefix
+        kab_key = f"KABUPATEN {key}"
+        if kab_key in self._by_name:
+            return self._by_name[kab_key]
 
-        return Coordinates(**self._dataset["default"])
+        # Fuzzy: find any entry containing the location word
+        for name, coords in self._by_name.items():
+            bare = re.sub(r"^(KABUPATEN|KOTA)\s+", "", name)
+            if bare == key:
+                return coords
 
-    @staticmethod
-    def _load_dataset(path: Path) -> dict[str, Any]:
-        if not path.exists():
-            return {
-                "by_code": {},
-                "by_name": {},
-                "default": {
-                    "latitude": -6.1754,
-                    "longitude": 106.8451,
-                    "region": "DKI Jakarta(Example)",
-                },
-            }
-
-        with path.open("r", encoding="utf-8") as file:
-            return json.load(file)
+        return self._default

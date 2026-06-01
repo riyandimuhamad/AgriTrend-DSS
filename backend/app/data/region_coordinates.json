@@ -1,47 +1,144 @@
 {
-  "by_code": {
-    "3171": {
-      "latitude": -6.2088,
-      "longitude": 106.8456,
-      "region": "KOTA JAKARTA PUSAT"
-    },
-    "3201": {
+  "by_name": {
+    "KABUPATEN BOGOR": {
       "latitude": -6.595,
       "longitude": 106.8166,
-      "region": "KABUPATEN BOGOR"
+      "region": "Kab. Bogor"
     },
-    "3202": {
+    "KABUPATEN SUKABUMI": {
       "latitude": -6.9241,
       "longitude": 106.9222,
-      "region": "KABUPATEN SUKABUMI"
+      "region": "Kab. Sukabumi"
     },
-    "3203": {
+    "KABUPATEN CIANJUR": {
       "latitude": -6.8166,
       "longitude": 107.1426,
-      "region": "KABUPATEN CIANJUR"
+      "region": "Kab. Cianjur"
     },
-    "3204": {
+    "KABUPATEN BANDUNG": {
       "latitude": -7.0367,
       "longitude": 107.5222,
-      "region": "KABUPATEN BANDUNG"
+      "region": "Kab. Bandung"
     },
-    "3205": {
+    "KABUPATEN GARUT": {
       "latitude": -7.2279,
       "longitude": 107.9087,
-      "region": "KABUPATEN GARUT"
+      "region": "Kab. Garut"
+    },
+    "KABUPATEN TASIKMALAYA": {
+      "latitude": -7.3274,
+      "longitude": 108.2207,
+      "region": "Kab. Tasikmalaya"
+    },
+    "KABUPATEN CIAMIS": {
+      "latitude": -7.3306,
+      "longitude": 108.3524,
+      "region": "Kab. Ciamis"
+    },
+    "KABUPATEN KUNINGAN": {
+      "latitude": -6.9761,
+      "longitude": 108.4751,
+      "region": "Kab. Kuningan"
+    },
+    "KABUPATEN CIREBON": {
+      "latitude": -6.7319,
+      "longitude": 108.5523,
+      "region": "Kab. Cirebon"
+    },
+    "KABUPATEN MAJALENGKA": {
+      "latitude": -6.8364,
+      "longitude": 108.2274,
+      "region": "Kab. Majalengka"
+    },
+    "KABUPATEN SUMEDANG": {
+      "latitude": -6.8579,
+      "longitude": 107.9228,
+      "region": "Kab. Sumedang"
+    },
+    "KABUPATEN INDRAMAYU": {
+      "latitude": -6.3277,
+      "longitude": 108.3212,
+      "region": "Kab. Indramayu"
+    },
+    "KABUPATEN SUBANG": {
+      "latitude": -6.5706,
+      "longitude": 107.7594,
+      "region": "Kab. Subang"
+    },
+    "KABUPATEN PURWAKARTA": {
+      "latitude": -6.5567,
+      "longitude": 107.4432,
+      "region": "Kab. Purwakarta"
+    },
+    "KABUPATEN KARAWANG": {
+      "latitude": -6.3215,
+      "longitude": 107.3381,
+      "region": "Kab. Karawang"
+    },
+    "KABUPATEN BEKASI": {
+      "latitude": -6.3744,
+      "longitude": 107.1567,
+      "region": "Kab. Bekasi"
+    },
+    "KABUPATEN BANDUNG BARAT": {
+      "latitude": -6.8424,
+      "longitude": 107.4614,
+      "region": "Kab. Bandung Barat"
+    },
+    "KABUPATEN PANGANDARAN": {
+      "latitude": -7.6906,
+      "longitude": 108.6503,
+      "region": "Kab. Pangandaran"
+    },
+    "KOTA BOGOR": {
+      "latitude": -6.5971,
+      "longitude": 106.806,
+      "region": "Kota Bogor"
+    },
+    "KOTA SUKABUMI": {
+      "latitude": -6.9277,
+      "longitude": 106.9297,
+      "region": "Kota Sukabumi"
+    },
+    "KOTA BANDUNG": {
+      "latitude": -6.9175,
+      "longitude": 107.6191,
+      "region": "Kota Bandung"
+    },
+    "KOTA CIREBON": {
+      "latitude": -6.7063,
+      "longitude": 108.5569,
+      "region": "Kota Cirebon"
+    },
+    "KOTA BEKASI": {
+      "latitude": -6.2383,
+      "longitude": 106.9756,
+      "region": "Kota Bekasi"
+    },
+    "KOTA DEPOK": {
+      "latitude": -6.4025,
+      "longitude": 106.7942,
+      "region": "Kota Depok"
+    },
+    "KOTA CIMAHI": {
+      "latitude": -6.8722,
+      "longitude": 107.5422,
+      "region": "Kota Cimahi"
+    },
+    "KOTA TASIKMALAYA": {
+      "latitude": -7.3506,
+      "longitude": 108.2207,
+      "region": "Kota Tasikmalaya"
+    },
+    "KOTA BANJAR": {
+      "latitude": -7.3714,
+      "longitude": 108.5398,
+      "region": "Kota Banjar"
     }
   },
-  "by_name": {
-    "KABUPATEN BOGOR": "3201",
-    "KABUPATEN SUKABUMI": "3202",
-    "KABUPATEN CIANJUR": "3203",
-    "KABUPATEN BANDUNG": "3204",
-    "KABUPATEN GARUT": "3205",
-    "KOTA JAKARTA PUSAT": "3171"
-  },
   "default": {
-    "latitude": -6.2,
-    "longitude": 106.8,
-    "region": "INDONESIA (DUMMY DEFAULT)"
+    "latitude": -6.9175,
+    "longitude": 107.6191,
+    "region": "Kab. Bandung"
   }
 }
