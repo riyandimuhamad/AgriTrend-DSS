@@ -1,0 +1,110 @@
+{
+    "Kab. Bandung|Jagung": {
+        "mean_yield_ton_ha": 5.73
+    },
+    "Kab. Bandung|Padi": {
+        "mean_yield_ton_ha": 5.43
+    },
+    "Kab. Bandung Barat|Jagung": {
+        "mean_yield_ton_ha": 5.99
+    },
+    "Kab. Bandung Barat|Padi": {
+        "mean_yield_ton_ha": 5.47
+    },
+    "Kab. Bekasi|Jagung": {
+        "mean_yield_ton_ha": 5.99
+    },
+    "Kab. Bekasi|Padi": {
+        "mean_yield_ton_ha": 5.61
+    },
+    "Kab. Bogor|Jagung": {
+        "mean_yield_ton_ha": 6.11
+    },
+    "Kab. Bogor|Padi": {
+        "mean_yield_ton_ha": 5.11
+    },
+    "Kab. Ciamis|Jagung": {
+        "mean_yield_ton_ha": 5.9
+    },
+    "Kab. Ciamis|Padi": {
+        "mean_yield_ton_ha": 5.39
+    },
+    "Kab. Cianjur|Jagung": {
+        "mean_yield_ton_ha": 6.18
+    },
+    "Kab. Cianjur|Padi": {
+        "mean_yield_ton_ha": 5.29
+    },
+    "Kab. Cirebon|Jagung": {
+        "mean_yield_ton_ha": 5.96
+    },
+    "Kab. Cirebon|Padi": {
+        "mean_yield_ton_ha": 5.59
+    },
+    "Kab. Garut|Jagung": {
+        "mean_yield_ton_ha": 6.29
+    },
+    "Kab. Garut|Padi": {
+        "mean_yield_ton_ha": 5.29
+    },
+    "Kab. Indramayu|Jagung": {
+        "mean_yield_ton_ha": 5.67
+    },
+    "Kab. Indramayu|Padi": {
+        "mean_yield_ton_ha": 5.77
+    },
+    "Kab. Karawang|Jagung": {
+        "mean_yield_ton_ha": 5.97
+    },
+    "Kab. Karawang|Padi": {
+        "mean_yield_ton_ha": 5.85
+    },
+    "Kab. Kuningan|Jagung": {
+        "mean_yield_ton_ha": 5.88
+    },
+    "Kab. Kuningan|Padi": {
+        "mean_yield_ton_ha": 5.47
+    },
+    "Kab. Majalengka|Jagung": {
+        "mean_yield_ton_ha": 6.06
+    },
+    "Kab. Majalengka|Padi": {
+        "mean_yield_ton_ha": 5.57
+    },
+    "Kab. Pangandaran|Jagung": {
+        "mean_yield_ton_ha": 5.88
+    },
+    "Kab. Pangandaran|Padi": {
+        "mean_yield_ton_ha": 5.37
+    },
+    "Kab. Purwakarta|Jagung": {
+        "mean_yield_ton_ha": 5.79
+    },
+    "Kab. Purwakarta|Padi": {
+        "mean_yield_ton_ha": 5.23
+    },
+    "Kab. Subang|Jagung": {
+        "mean_yield_ton_ha": 6.08
+    },
+    "Kab. Subang|Padi": {
+        "mean_yield_ton_ha": 5.87
+    },
+    "Kab. Sukabumi|Jagung": {
+        "mean_yield_ton_ha": 5.87
+    },
+    "Kab. Sukabumi|Padi": {
+        "mean_yield_ton_ha": 5.02
+    },
+    "Kab. Sumedang|Jagung": {
+        "mean_yield_ton_ha": 5.92
+    },
+    "Kab. Sumedang|Padi": {
+        "mean_yield_ton_ha": 5.46
+    },
+    "Kab. Tasikmalaya|Jagung": {
+        "mean_yield_ton_ha": 6.12
+    },
+    "Kab. Tasikmalaya|Padi": {
+        "mean_yield_ton_ha": 5.3
+    }
+}
