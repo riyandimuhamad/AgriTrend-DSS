@@ -113,7 +113,9 @@ export type Prediction = {
   crop: string;
   area: number;
   date: string;
+  plantingDate: string;
   yield: number;
+  yieldTotal: number;
   status: "BERLIMPAH" | "NORMAL" | "GAGAL";
   confidence: number;
   advice: string;

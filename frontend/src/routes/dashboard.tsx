@@ -23,34 +23,10 @@ export const Route = createFileRoute("/dashboard")({
 
 // ─── Helper ──────────────────────────────────────────────────────────────────
 
-function marketTrendToStatus(trend: string): Prediction["status"] {
-  if (trend.includes("naik") || trend.includes("berlimpah")) return "BERLIMPAH";
-  if (trend.includes("mitigasi") || trend.includes("gagal") || trend.includes("turun"))
-    return "GAGAL";
+function backendStatusToStatus(status: string): Prediction["status"] {
+  if (status === "PANEN_BERLIMPAH") return "BERLIMPAH";
+  if (status === "CRITICAL") return "GAGAL";
   return "NORMAL";
-}
-
-function extractAdvice(insightStructured: Record<string, unknown>, insightRaw: string): string {
-  const s = insightStructured;
-  const advice =
-    (s.advice as string) ??
-    (s.saran as string) ??
-    (s.rekomendasi as string) ??
-    (s.recommendation as string) ??
-    (s.summary as string) ??
-    null;
-  if (advice) return advice;
-  try {
-    const parsed = JSON.parse(insightRaw) as Record<string, unknown>;
-    return (
-      (parsed.advice as string) ??
-      (parsed.saran as string) ??
-      (parsed.rekomendasi as string) ??
-      insightRaw.slice(0, 300)
-    );
-  } catch {
-    return insightRaw.slice(0, 300);
-  }
 }
 
 // ─── Komponen utama ───────────────────────────────────────────────────────────
@@ -63,7 +39,7 @@ function Dashboard() {
 
   // 4 field form — sesuai kebutuhan backend
   const [location, setLocation] = useState("");
-  const [cropType, setCropType] = useState("padi");
+  const [cropType, setCropType] = useState("Padi");
   const [landArea, setLandArea] = useState("2.5");
   const [plantingDate, setPlantingDate] = useState(
     () => new Date().toISOString().slice(0, 10), // default: hari ini
@@ -87,21 +63,23 @@ function Dashboard() {
         planting_date: plantingDate,
       });
 
-      const yieldVal = data.prediction.predicted_yield_ton_per_ha;
-      const status = marketTrendToStatus(data.prediction.market_trend);
-      const advice = extractAdvice(data.insight_structured, data.insight);
-      const region = data.prediction.coordinates?.region ?? location.trim() ?? "Tidak diketahui";
+      const result = data.data;
+      const status = backendStatusToStatus(result.status);
 
       const pred: Prediction = {
         id: crypto.randomUUID(),
-        location: region,
+        location: result.region ?? location.trim() ?? "Tidak diketahui",
         crop: cropType,
         area: parseFloat(landArea),
         date: new Date().toISOString().slice(0, 10),
-        yield: parseFloat(yieldVal.toFixed(2)),
+        plantingDate: plantingDate,
+        yield: parseFloat(result.yield_per_ha.toFixed(2)),
+        yieldTotal: parseFloat(
+          (result.yield_total ?? result.yield_per_ha * parseFloat(landArea)).toFixed(1),
+        ),
         status,
-        confidence: data.prediction.confidence ?? 85,
-        advice,
+        confidence: result.confidence ?? 85,
+        advice: result.ai_advice ?? "",
       };
 
       setCurrent(pred);
@@ -163,8 +141,8 @@ function Dashboard() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="padi">Padi</SelectItem>
-                    <SelectItem value="jagung">Jagung</SelectItem>
+                    <SelectItem value="Padi">Padi</SelectItem>
+                    <SelectItem value="Jagung">Jagung</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -322,19 +300,27 @@ function SkeletonResult() {
   );
 }
 
+const STATUS_DETAIL: Record<Prediction["status"], { cuaca: string; tanah: string; tren: string }> =
+  {
+    BERLIMPAH: { cuaca: "Optimal", tanah: "Subur", tren: "Di atas rata-rata" },
+    NORMAL: { cuaca: "Normal", tanah: "Cukup", tren: "Rata-rata regional" },
+    GAGAL: { cuaca: "Kurang Baik", tanah: "Perlu Perbaikan", tren: "Di bawah rata-rata" },
+  };
+
 function ResultCard({ pred }: { pred: Prediction }) {
   const conf = STATUS_CONF[pred.status];
-  const total = (pred.yield * pred.area).toFixed(1);
+  const detail = STATUS_DETAIL[pred.status];
 
   return (
     <div className="rounded-3xl border border-border/60 bg-[image:var(--gradient-card)] p-8 shadow-[var(--shadow-elegant)]">
+      {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <MapPin className="h-4 w-4 text-primary" /> {pred.location}
           </div>
           <div className="mt-1 text-xs text-muted-foreground capitalize">
-            {pred.crop} · {pred.area} ha · {pred.date}
+            {pred.crop} · {pred.area} Ha · Ditanam {pred.plantingDate}
           </div>
         </div>
         <span
@@ -357,7 +343,7 @@ function ResultCard({ pred }: { pred: Prediction }) {
         </div>
         <div className="ml-auto rounded-2xl bg-muted/60 px-4 py-3 text-right">
           <div className="text-xs text-muted-foreground">Total panen</div>
-          <div className="text-xl font-bold">~{total} ton</div>
+          <div className="text-xl font-bold">~{pred.yieldTotal} ton</div>
         </div>
       </div>
 
@@ -373,19 +359,23 @@ function ResultCard({ pred }: { pred: Prediction }) {
         <span>confidence</span>
       </div>
 
-      {/* 3 kartu ringkasan */}
+      {/* 3 kartu ringkasan — label kualitatif dari status */}
       <div className="mt-6 grid grid-cols-3 gap-3">
-        {[
-          { i: CloudSun, l: "Cuaca", v: "Otomatis" },
-          { i: TrendingUp, l: "Tren Pasar", v: "Diprediksi" },
-          { i: Brain, l: "AI Insight", v: "Aktif" },
-        ].map((s) => (
-          <div key={s.l} className="rounded-2xl bg-muted/40 p-3">
-            <s.i className="h-4 w-4 text-primary" />
-            <div className="mt-2 text-xs text-muted-foreground">{s.l}</div>
-            <div className="text-sm font-semibold">{s.v}</div>
-          </div>
-        ))}
+        <div className="rounded-2xl bg-muted/40 p-3">
+          <CloudSun className="h-4 w-4 text-primary" />
+          <div className="mt-2 text-xs text-muted-foreground">Cuaca</div>
+          <div className="text-sm font-semibold">{detail.cuaca}</div>
+        </div>
+        <div className="rounded-2xl bg-muted/40 p-3">
+          <Leaf className="h-4 w-4 text-primary" />
+          <div className="mt-2 text-xs text-muted-foreground">Tanah</div>
+          <div className="text-sm font-semibold">{detail.tanah}</div>
+        </div>
+        <div className="rounded-2xl bg-muted/40 p-3">
+          <TrendingUp className="h-4 w-4 text-primary" />
+          <div className="mt-2 text-xs text-muted-foreground">Tren Pasar</div>
+          <div className="text-sm font-semibold">{detail.tren}</div>
+        </div>
       </div>
 
       {/* Saran AI */}

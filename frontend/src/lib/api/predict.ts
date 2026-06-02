@@ -2,30 +2,30 @@ import apiClient from "@/lib/api-client";
 
 // ─── Request — hanya 4 field dari form petani ─────────────────────────────────
 export interface PredictRequest {
-  location: string; // nama kabupaten/kota
-  crop_type: string; // "padi" | "jagung"
-  land_area: number; // hektar
+  location: string;
+  crop_type: string;
+  land_area: number;
   planting_date: string; // format YYYY-MM-DD
 }
 
-// ─── Response — struktur dari backend ────────────────────────────────────────
-export interface PredictCoordinates {
-  latitude: number;
-  longitude: number;
+// ─── Response — struktur aktual dari backend ──────────────────────────────────
+export interface PredictData {
+  yield_per_ha: number;
+  yield_total: number;
+  unit: string;
+  confidence: number;
+  yield_min: number;
+  yield_max: number;
+  status: "NORMAL" | "PANEN_BERLIMPAH" | "CRITICAL";
+  crop_type: string;
   region: string;
-}
-
-export interface PredictResult {
-  predicted_yield_ton_per_ha: number;
-  market_trend: string;
-  confidence?: number; // 0–100, opsional dari backend
-  coordinates: PredictCoordinates;
+  ai_advice: string;
+  timestamp: string;
 }
 
 export interface PredictResponse {
-  prediction: PredictResult;
-  insight: string;
-  insight_structured: Record<string, unknown>;
+  success: boolean;
+  data: PredictData;
 }
 
 // ─── Fungsi pemanggil API ─────────────────────────────────────────────────────
