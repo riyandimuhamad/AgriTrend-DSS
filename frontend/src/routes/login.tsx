@@ -23,8 +23,8 @@ export const Route = createFileRoute("/login")({
 
 function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("petani@demo.id");
-  const [password, setPassword] = useState("demo1234");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [showErrorDialog, setShowErrorDialog] = useState(false);
@@ -249,6 +249,7 @@ function Login() {
               <Input
                 id="email"
                 type="email"
+                placeholder="nama@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -271,6 +272,7 @@ function Login() {
               <Input
                 id="password"
                 type="password"
+                placeholder="Masukkan kata sandi"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required

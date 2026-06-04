@@ -128,7 +128,7 @@ function Hero({ splashDone }: { splashDone: boolean }) {
             cardRef.current,
             floatingCardRef.current,
           ],
-          { opacity: 1 }
+          { opacity: 1 },
         );
         return;
       }
@@ -138,47 +138,46 @@ function Hero({ splashDone }: { splashDone: boolean }) {
       tl.fromTo(
         badgeRef.current,
         { opacity: 0, y: -16 },
-        { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }
+        { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
       )
         .fromTo(
           headingRef.current,
           { opacity: 0, y: 40 },
           { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
-          "-=0.3"
+          "-=0.3",
         )
         .fromTo(
           paraRef.current,
           { opacity: 0, y: 30 },
           { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
-          "-=0.4"
+          "-=0.4",
         )
         .fromTo(
           ctaRef.current,
           { opacity: 0, y: 20 },
           { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
-          "-=0.3"
+          "-=0.3",
         )
         .fromTo(
           trustRef.current,
           { opacity: 0 },
           { opacity: 1, duration: 0.4, ease: "power2.out" },
-          "-=0.2"
+          "-=0.2",
         )
         .fromTo(
           cardRef.current,
           { opacity: 0, y: 50, scale: 0.96 },
           { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "power3.out" },
-          "-=1.5"
+          "-=1.5",
         )
         .fromTo(
           floatingCardRef.current,
           { opacity: 0, x: -20, y: 10 },
           { opacity: 1, x: 0, y: 0, duration: 0.5, ease: "back.out(1.4)" },
-          "-=0.1"
+          "-=0.1",
         );
-
     },
-    { dependencies: [splashDone] }
+    { dependencies: [splashDone] },
   );
 
   return (
@@ -196,7 +195,7 @@ function Hero({ splashDone }: { splashDone: boolean }) {
               className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold text-primary"
             >
               <Sparkles className="h-3.5 w-3.5" />
-              AI Engineer Capstone Project 2025
+              PJK-GM023's Capstone Project 2026
             </div>
             <h1
               ref={headingRef}
@@ -209,7 +208,11 @@ function Hero({ splashDone }: { splashDone: boolean }) {
               </span>{" "}
               untuk petani Indonesia.
             </h1>
-            <p ref={paraRef} style={{ opacity: 0 }} className="mt-6 max-w-xl text-lg text-muted-foreground">
+            <p
+              ref={paraRef}
+              style={{ opacity: 0 }}
+              className="mt-6 max-w-xl text-lg text-muted-foreground"
+            >
               Cukup masukkan lokasi dan jenis tanaman. Sistem otomatis menarik data cuaca, tanah,
               dan historis — lalu memberi estimasi hasil panen serta saran bisnis dalam Bahasa
               Indonesia yang mudah dipahami.
@@ -369,7 +372,7 @@ function Features() {
             start: "top 85%",
             once: true,
           },
-        }
+        },
       );
 
       gsap.fromTo(
@@ -387,10 +390,10 @@ function Features() {
             start: "top 80%",
             once: true,
           },
-        }
+        },
       );
     },
-    { scope: containerRef }
+    { scope: containerRef },
   );
 
   const onMouseEnter = (i: number) => {
@@ -491,7 +494,7 @@ function HowItWorks() {
             start: "top 85%",
             once: true,
           },
-        }
+        },
       );
 
       if (gridRef.current) {
@@ -509,11 +512,11 @@ function HowItWorks() {
               start: "top 80%",
               once: true,
             },
-          }
+          },
         );
       }
     },
-    { scope: containerRef }
+    { scope: containerRef },
   );
 
   return (
@@ -533,7 +536,11 @@ function HowItWorks() {
         </div>
         <div ref={gridRef} className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {steps.map((s) => (
-            <div key={s.n} style={{ opacity: 0 }} className="rounded-3xl border border-border/60 bg-card p-6">
+            <div
+              key={s.n}
+              style={{ opacity: 0 }}
+              className="rounded-3xl border border-border/60 bg-card p-6"
+            >
               <div className="text-sm font-bold text-primary">{s.n}</div>
               <h3 className="mt-3 text-lg font-semibold">{s.title}</h3>
               <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
@@ -585,7 +592,7 @@ function Stats() {
             start: "top 85%",
             once: true,
           },
-        }
+        },
       );
 
       stats.forEach((stat, i) => {
@@ -612,7 +619,7 @@ function Stats() {
         }
       });
     },
-    { scope: containerRef }
+    { scope: containerRef },
   );
 
   return (
@@ -663,15 +670,15 @@ function CTA() {
       tl.fromTo(
         cardRef.current,
         { opacity: 0, y: 60, scale: 0.97 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "power3.out" }
+        { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "power3.out" },
       ).fromTo(
         contentRef.current?.children || [],
         { opacity: 0, y: 20 },
         { opacity: 1, y: 0, duration: 0.5, stagger: 0.1, ease: "power2.out" },
-        "-=0.4"
+        "-=0.4",
       );
     },
-    { scope: containerRef }
+    { scope: containerRef },
   );
 
   return (
@@ -717,9 +724,7 @@ function Footer() {
           </div>
           <span className="text-sm font-semibold">Agri Trend DSS</span>
         </div>
-        <p className="text-xs text-muted-foreground">
-          © 2025 Capstone Project · AI Engineer Scholarship
-        </p>
+        <p className="text-xs text-muted-foreground">© 2026 Capstone Project · PJK-GM023</p>
       </div>
     </footer>
   );
