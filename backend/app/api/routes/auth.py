@@ -8,8 +8,10 @@ router = APIRouter()
 
 
 @router.post("/register", response_model=AuthResponse)
-def register(payload: RegisterRequest, service: AuthService = Depends(AuthService)) -> AuthResponse:
-    result = service.register(payload.email, payload.username, payload.password)
+def register(
+    payload: RegisterRequest, service: AuthService = Depends(AuthService)
+) -> AuthResponse:
+    result = service.register(payload.username, payload.email, payload.password)
     return AuthResponse(**result)
 
 
