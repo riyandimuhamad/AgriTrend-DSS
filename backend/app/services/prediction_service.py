@@ -1,8 +1,16 @@
+import uuid
 from datetime import datetime, timezone
 
 from fastapi import HTTPException
 
-from app.schemas.prediction import PredictionData, PredictionRequest, PredictionResponse
+from app.core.supabase_client import get_supabase_client
+from app.schemas.prediction import (
+    AdviceResponse,
+    AIAdviceStructuredOutput,
+    PredictionMetrics,
+    PredictionRequest,
+    PredictionResponse,
+)
 from app.services.genai_service import GenAIService
 from app.services.location_service import LocationService
 from app.services.ml_service import run_prediction
@@ -18,6 +26,7 @@ class PredictionService:
     def __init__(self) -> None:
         self._location = LocationService()
         self._genai = GenAIService()
+        self._db = get_supabase_client()
 
     def predict(self, payload: PredictionRequest) -> PredictionResponse:
         coords = self._location.resolve_by_name(payload.location)
@@ -40,16 +49,27 @@ class PredictionService:
                 detail="Layanan prediksi sedang tidak tersedia. Coba beberapa saat lagi.",
             )
 
+        prediction_id = str(uuid.uuid4())
         status = _STATUS_MAP.get(ml["status"], "WARNING")
-        ai_advice = self._genai.generate_advice(
-            crop_type=payload.crop_type,
-            region=coords["region"],
-            yield_per_ha=ml["yield_per_ha"],
-            status=status,
-        )
+        now = datetime.now(timezone.utc)
+
+        self._db.table("predictions").insert({
+            "id": prediction_id,
+            "crop_type": payload.crop_type,
+            "region": coords["region"],
+            "yield_per_ha": ml["yield_per_ha"],
+            "yield_total": ml["yield_total"],
+            "confidence": ml["confidence"],
+            "yield_min": ml["yield_min"],
+            "yield_max": ml["yield_max"],
+            "status": status,
+            "unit": "ton",
+            "created_at": now.isoformat(),
+        }).execute()
 
         return PredictionResponse(
-            data=PredictionData(
+            data=PredictionMetrics(
+                prediction_id=prediction_id,
                 yield_per_ha=ml["yield_per_ha"],
                 yield_total=ml["yield_total"],
                 unit="ton",
@@ -59,7 +79,31 @@ class PredictionService:
                 status=status,
                 crop_type=payload.crop_type,
                 region=coords["region"],
-                ai_advice=ai_advice,
-                timestamp=datetime.now(timezone.utc),
+                timestamp=now,
             )
         )
+
+    def get_advice(self, prediction_id: str) -> AdviceResponse:
+        result = (
+            self._db.table("predictions")
+            .select("crop_type, region, yield_per_ha, status")
+            .eq("id", prediction_id)
+            .maybe_single()
+            .execute()
+        )
+
+        if result.data is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Prediction ID tidak ditemukan atau sudah kedaluwarsa.",
+            )
+
+        row = result.data
+        advice: AIAdviceStructuredOutput = self._genai.generate_advice(
+            crop_type=row["crop_type"],
+            region=row["region"],
+            yield_per_ha=row["yield_per_ha"],
+            status=row["status"],
+        )
+
+        return AdviceResponse(prediction_id=prediction_id, data=advice)

@@ -12,5 +12,8 @@ def get_current_user(
 ) -> dict:
 
     if not credentials:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Bearer token wajib diisi.")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Required authentication token.",
+        )
     return service.get_user_from_token(credentials.credentials)
