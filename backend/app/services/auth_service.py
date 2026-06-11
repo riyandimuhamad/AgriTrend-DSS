@@ -12,7 +12,11 @@ class AuthService:
     def register(self, username: str, email: str, password: str) -> dict[str, Any]:
         try:
             response = self.client.auth.sign_up(
-                {"username": username, "email": email, "password": password}
+                {
+                    "email": email,
+                    "password": password,
+                    "options": {"data": {"username": username}},
+                }
             )
             session = response.session.model_dump() if response.session else {}
             return {
@@ -41,11 +45,7 @@ class AuthService:
             return {
                 "access_token": session.get("access_token"),
                 "refresh_token": session.get("refresh_token"),
-                "user": (
-                    response.user.model_dump().get("username")
-                    if response.user
-                    else None
-                ),
+                "user": response.user.model_dump() if response.user else None,
                 "message": "Login Succesfully.",
             }
         except HTTPException:
