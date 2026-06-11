@@ -29,6 +29,7 @@ class AuthService:
             raise HTTPException(
                 status_code=self._map_status(str(exc)),
                 detail=self._clean_error(str(exc)),
+                message="Failed to Register.",
             ) from exc
 
     def login(self, email: str, password: str) -> dict[str, Any]:
@@ -39,7 +40,7 @@ class AuthService:
             if not response.session:
                 raise HTTPException(
                     status_code=401,
-                    detail="Failed to Login..",
+                    detail="Failed to Login.",
                 )
             session = response.session.model_dump()
             return {

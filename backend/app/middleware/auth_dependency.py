@@ -16,4 +16,7 @@ def get_current_user(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Required authentication token.",
         )
-    return service.get_user_from_token(credentials.credentials)
+    return {
+        **service.get_user_from_token(credentials.credentials),
+        "access_token": credentials.credentials,
+    }
