@@ -28,7 +28,7 @@ class PredictionService:
         self._genai = GenAIService()
         self._db = get_supabase_client()
 
-    def predict(self, payload: PredictionRequest) -> PredictionResponse:
+    def predict(self, payload: PredictionRequest, user_id: str) -> PredictionResponse:
         coords = self._location.resolve_by_name(payload.location)
 
         try:
@@ -55,6 +55,7 @@ class PredictionService:
 
         self._db.table("predictions").insert({
             "id": prediction_id,
+            "user_id": user_id,
             "crop_type": payload.crop_type,
             "region": coords["region"],
             "yield_per_ha": ml["yield_per_ha"],
@@ -83,11 +84,12 @@ class PredictionService:
             )
         )
 
-    def get_advice(self, prediction_id: str) -> AdviceResponse:
+    def get_advice(self, prediction_id: str, user_id: str) -> AdviceResponse:
         result = (
             self._db.table("predictions")
             .select("crop_type, region, yield_per_ha, status")
             .eq("id", prediction_id)
+            .eq("user_id", user_id)
             .maybe_single()
             .execute()
         )
