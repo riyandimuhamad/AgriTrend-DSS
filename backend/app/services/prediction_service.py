@@ -119,6 +119,13 @@ class PredictionService:
             status=row["status"],
         )
 
+        db.table("predictions").update(
+            {
+                "advice_analysis": advice.analysis,
+                "advice_recommendation": advice.recommendation,
+            }
+        ).eq("user_id", user_id).execute()
+
         return AdviceResponse(prediction_id=prediction_id, data=advice)
 
     def get_history(self, user_id: str, access_token: str) -> PredictionHistoryResponse:
@@ -128,15 +135,26 @@ class PredictionService:
             db.table("predictions")
             .select(
                 "id, crop_type, region, yield_per_ha, yield_total, "
-                "confidence, yield_min, yield_max, status, unit, created_at"
+                "confidence, yield_min, yield_max, status, unit, created_at, "
+                "advice_analysis, advice_recommendation"
             )
             .eq("user_id", user_id)
             .order("created_at", desc=True)
             .execute()
         )
 
-        return PredictionHistoryResponse(
-            data=[
+        history: list[PredictionHistoryItem] = []
+
+        for row in result.data:
+            advice = None
+
+            if row.get("advice_analysis") or row.get("advice_recommendation"):
+                advice = AIAdviceStructuredOutput(
+                    analysis=row.get("advice_analysis") or "",
+                    recommendation=row.get("advice_recommendation") or "",
+                )
+
+            history.append(
                 PredictionHistoryItem(
                     prediction_id=row["id"],
                     crop_type=row["crop_type"],
@@ -149,7 +167,8 @@ class PredictionService:
                     status=row["status"],
                     unit=row["unit"],
                     timestamp=row["created_at"],
+                    advice=advice,
                 )
-                for row in result.data
-            ]
-        )
+            )
+
+        return PredictionHistoryResponse(data=history)

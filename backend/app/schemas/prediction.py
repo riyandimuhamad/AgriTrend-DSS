@@ -12,10 +12,10 @@ class PredictionRequest(BaseModel):
 
 class AIAdviceStructuredOutput(BaseModel):
     analysis: str = Field(
-        description="Analisis supply-demand dan risiko pasar, 2-3 paragraf."
+        description="Analisis mendalam mengenai supply-demand, dinamika pasar, dan risiko penjualan berdasarkan hasil prediksi volume panen. Ditulis dalam 2-3 paragraf pendek menggunakan Bahasa Indonesia."
     )
     recommendation: str = Field(
-        description="Satu tindakan konkret yang bisa dieksekusi petani dalam 30 hari ke depan."
+        description="Satu tindakan bisnis konkret, spesifik, dan sangat realistis yang harus dilakukan petani dalam 30 hari ke depan untuk mengamankan keuntungan atau memitigasi kerugian."
     )
 
 
@@ -50,6 +50,7 @@ class PredictionHistoryItem(BaseModel):
     yield_max: float
     status: str
     timestamp: datetime
+    advice: AIAdviceStructuredOutput | None = None
 
 
 class PredictionHistoryResponse(BaseModel):

@@ -90,10 +90,10 @@ Server berjalan di `http://localhost:8000`
 
 ### Prediksi
 
-| Method | Endpoint                              | Deskripsi              | Auth         |
-| ------ | ------------------------------------- | ---------------------- | ------------ |
-| `POST` | `/api/v1/ml/predict`                  | Prediksi hasil panen   | Bearer token |
-| `GET`  | `/api/v1/ml/predict/{id}/advice`      | AI advice prediksi     | Bearer token |
+| Method | Endpoint                         | Deskripsi            | Auth         |
+| ------ | -------------------------------- | -------------------- | ------------ |
+| `POST` | `/api/v1/ml/predict`             | Prediksi hasil panen | Bearer token |
+| `GET`  | `/api/v1/ml/predict/{id}/advice` | AI advice prediksi   | Bearer token |
 
 ### Lainnya
 
@@ -170,7 +170,9 @@ CREATE TABLE predictions (
     confidence   int NOT NULL,
     status       text NOT NULL,
     unit         text NOT NULL DEFAULT 'ton',
-    created_at   timestamptz NOT NULL DEFAULT now()
+    created_at   timestamptz NOT NULL DEFAULT now(),
+    advice_analysis text,
+    advice_recommendation text;
 );
 ```
 
