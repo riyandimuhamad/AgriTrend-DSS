@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { DashboardShell, type Prediction } from "@/components/dashboard-shell";
+import { DashboardShell } from "@/components/dashboard-shell";
 import { TrendingUp, TrendingDown, Sparkles, Leaf, AlertTriangle, BarChart3 } from "lucide-react";
+import { fetchHistory, type HistoryItem } from "@/lib/api/predict";
 
 export const Route = createFileRoute("/analitik")({
   head: () => ({ meta: [{ title: "Analitik — Agri Trend DSS" }] }),
@@ -9,51 +10,41 @@ export const Route = createFileRoute("/analitik")({
 });
 
 function AnalitikPage() {
-  const [history, setHistory] = useState<Prediction[]>([]);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const h = localStorage.getItem("sai_history");
-      if (h) setHistory(JSON.parse(h));
-    }
+    fetchHistory()
+      .then((res) => setHistory(res.data))
+      .catch(() => {});
   }, []);
 
   const stats = useMemo(() => {
     const total = history.length;
-    const totalTon = history.reduce((a, h) => a + h.yield * h.area, 0);
-    const totalHa = history.reduce((a, h) => a + h.area, 0);
-    const avgYield = totalHa ? totalTon / totalHa : 0;
+    const totalTon = history.reduce((a, h) => a + h.yield_total, 0);
+    const avgYield = total ? history.reduce((a, h) => a + h.yield_per_ha, 0) / total : 0;
     const avgConf = total ? history.reduce((a, h) => a + h.confidence, 0) / total : 0;
 
-    const byCrop: Record<string, { count: number; ton: number; ha: number }> = {};
+    const byCrop: Record<string, { count: number; ton: number }> = {};
     history.forEach((h) => {
-      byCrop[h.crop] = byCrop[h.crop] || { count: 0, ton: 0, ha: 0 };
-      byCrop[h.crop].count++;
-      byCrop[h.crop].ton += h.yield * h.area;
-      byCrop[h.crop].ha += h.area;
+      byCrop[h.crop_type] = byCrop[h.crop_type] || { count: 0, ton: 0 };
+      byCrop[h.crop_type].count++;
+      byCrop[h.crop_type].ton += h.yield_total;
     });
 
-    const byStatus = { BERLIMPAH: 0, NORMAL: 0, GAGAL: 0 };
-    history.forEach((h) => byStatus[h.status]++);
+    const byStatus = { NORMAL: 0, CRITICAL: 0 };
+    history.forEach((h) => {
+      if (h.status === "CRITICAL") byStatus.CRITICAL++;
+      else byStatus.NORMAL++;
+    });
 
-    const sorted = [...history].sort((a, b) => a.date.localeCompare(b.date));
-    const trendPoints = sorted.slice(-12).map((h) => h.yield);
+    const sorted = [...history].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+    const trendPoints = sorted.slice(-12).map((h) => h.yield_per_ha);
     const trendDelta =
       trendPoints.length >= 2
         ? ((trendPoints[trendPoints.length - 1] - trendPoints[0]) / trendPoints[0]) * 100
         : 0;
 
-    return {
-      total,
-      totalTon,
-      totalHa,
-      avgYield,
-      avgConf,
-      byCrop,
-      byStatus,
-      trendPoints,
-      trendDelta,
-    };
+    return { total, totalTon, avgYield, avgConf, byCrop, byStatus, trendPoints, trendDelta };
   }, [history]);
 
   const maxTrend = Math.max(1, ...stats.trendPoints);
@@ -97,7 +88,7 @@ function AnalitikPage() {
             label: "Total Estimasi Panen",
             value: `${stats.totalTon.toFixed(1)} t`,
             icon: Leaf,
-            sub: `${stats.totalHa.toFixed(1)} ha total`,
+            sub: `${stats.total} sesi prediksi`,
           },
           {
             label: "Rata-rata Yield",
@@ -152,12 +143,12 @@ function AnalitikPage() {
           </div>
           <div className="mt-6 flex h-48 items-end gap-2">
             {stats.trendPoints.map((v, i) => (
-              <div key={i} className="group relative flex flex-1 flex-col items-center gap-2">
+              <div key={i} className="flex flex-1 flex-col items-center gap-1">
+                <span className="text-[10px] text-muted-foreground">{v.toFixed(1)}</span>
                 <div
                   className="w-full rounded-t-lg bg-[image:var(--gradient-hero)] transition-all hover:opacity-80"
-                  style={{ height: `${(v / maxTrend) * 100}%` }}
+                  style={{ height: `${(v / maxTrend) * 160}px` }}
                 />
-                <span className="text-[10px] text-muted-foreground">{v.toFixed(1)}</span>
               </div>
             ))}
           </div>
@@ -169,9 +160,8 @@ function AnalitikPage() {
           <p className="text-xs text-muted-foreground">Klasifikasi hasil prediksi</p>
           <div className="mt-6 space-y-4">
             {[
-              { key: "BERLIMPAH" as const, label: "Berlimpah", color: "bg-success" },
               { key: "NORMAL" as const, label: "Normal", color: "bg-primary" },
-              { key: "GAGAL" as const, label: "Gagal", color: "bg-destructive" },
+              { key: "CRITICAL" as const, label: "Gagal Panen", color: "bg-destructive" },
             ].map((s) => {
               const count = stats.byStatus[s.key];
               const pct = stats.total ? (count / stats.total) * 100 : 0;
@@ -207,9 +197,7 @@ function AnalitikPage() {
                 <div className="mb-1.5 flex items-center justify-between text-sm">
                   <span className="font-medium capitalize">
                     {crop}{" "}
-                    <span className="text-xs text-muted-foreground">
-                      ({data.count} prediksi · {data.ha.toFixed(1)} ha)
-                    </span>
+                    <span className="text-xs text-muted-foreground">({data.count} prediksi)</span>
                   </span>
                   <span className="font-bold">{data.ton.toFixed(1)} ton</span>
                 </div>
