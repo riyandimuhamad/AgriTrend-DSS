@@ -155,7 +155,9 @@ CREATE TABLE predictions (
     confidence   int NOT NULL,
     status       text NOT NULL,
     unit         text NOT NULL DEFAULT 'ton',
-    created_at   timestamptz NOT NULL DEFAULT now()
+    created_at   timestamptz NOT NULL DEFAULT now(),
+    advice_analysis text,
+    advice_recommendation text;
 );
 ```
 
