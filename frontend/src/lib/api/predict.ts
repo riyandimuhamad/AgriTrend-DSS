@@ -50,3 +50,28 @@ export async function fetchAdvice(predictionId: string): Promise<AdviceResponse>
   const res = await apiClient.get<AdviceResponse>(`/api/v1/ml/predict/${predictionId}/advice`);
   return res.data;
 }
+
+// ─── GET /history response ────────────────────────────────────────────────────
+export interface HistoryItem {
+  prediction_id: string;
+  crop_type: string;
+  region: string;
+  yield_per_ha: number;
+  yield_total: number;
+  unit: string;
+  confidence: number;
+  yield_min: number;
+  yield_max: number;
+  status: string;
+  timestamp: string;
+}
+
+export interface HistoryResponse {
+  success: boolean;
+  data: HistoryItem[];
+}
+
+export async function fetchHistory(): Promise<HistoryResponse> {
+  const res = await apiClient.get<HistoryResponse>("/api/v1/ml/history");
+  return res.data;
+}

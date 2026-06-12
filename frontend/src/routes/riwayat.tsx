@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { DashboardShell, STATUS_CONF, type Prediction } from "@/components/dashboard-shell";
+import { DashboardShell, STATUS_CONF } from "@/components/dashboard-shell";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -10,29 +10,33 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Search, Download, MapPin, Calendar, Trash2, History as HistoryIcon } from "lucide-react";
+import { Search, Download, MapPin, Calendar, History as HistoryIcon } from "lucide-react";
+import { fetchHistory, type HistoryItem } from "@/lib/api/predict";
 
 export const Route = createFileRoute("/riwayat")({
   head: () => ({ meta: [{ title: "Riwayat — Agri Trend DSS" }] }),
   component: RiwayatPage,
 });
 
+function statusToConf(status: string) {
+  return status === "CRITICAL" ? STATUS_CONF.GAGAL : STATUS_CONF.NORMAL;
+}
+
 function RiwayatPage() {
-  const [history, setHistory] = useState<Prediction[]>([]);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<string>("ALL");
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const h = localStorage.getItem("sai_history");
-      if (h) setHistory(JSON.parse(h));
-    }
+    fetchHistory()
+      .then((res) => setHistory(res.data))
+      .catch(() => {});
   }, []);
 
   const filtered = useMemo(() => {
     return history.filter((h) => {
       const q = query.toLowerCase();
-      const okQ = !q || h.location.toLowerCase().includes(q) || h.crop.toLowerCase().includes(q);
+      const okQ = !q || h.region.toLowerCase().includes(q) || h.crop_type.toLowerCase().includes(q);
       const okS = filter === "ALL" || h.status === filter;
       return okQ && okS;
     });
@@ -40,23 +44,13 @@ function RiwayatPage() {
 
   const exportCSV = () => {
     const rows = [
-      [
-        "Tanggal",
-        "Lokasi",
-        "Tanaman",
-        "Luas (ha)",
-        "Hasil (ton/ha)",
-        "Total (ton)",
-        "Status",
-        "Confidence",
-      ],
+      ["Tanggal", "Lokasi", "Tanaman", "Hasil (ton/ha)", "Total (ton)", "Status", "Confidence"],
       ...filtered.map((h) => [
-        h.date,
-        h.location,
-        h.crop,
-        h.area,
-        h.yield,
-        (h.yield * h.area).toFixed(2),
+        h.timestamp.slice(0, 10),
+        h.region,
+        h.crop_type,
+        h.yield_per_ha.toFixed(2),
+        h.yield_total.toFixed(2),
         h.status,
         `${h.confidence}%`,
       ]),
@@ -73,15 +67,8 @@ function RiwayatPage() {
     URL.revokeObjectURL(url);
   };
 
-  const clearAll = () => {
-    if (confirm("Hapus semua riwayat prediksi?")) {
-      localStorage.removeItem("sai_history");
-      setHistory([]);
-    }
-  };
-
   const totals = useMemo(() => {
-    const tot = history.reduce((a, h) => a + h.yield * h.area, 0);
+    const tot = history.reduce((a, h) => a + h.yield_total, 0);
     const avgConf = history.length
       ? Math.round(history.reduce((a, h) => a + h.confidence, 0) / history.length)
       : 0;
@@ -97,24 +84,14 @@ function RiwayatPage() {
             Lihat dan kelola seluruh prediksi panen yang pernah Anda buat.
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={exportCSV}
-            disabled={!filtered.length}
-            className="rounded-full"
-          >
-            <Download className="mr-2 h-4 w-4" /> Export CSV
-          </Button>
-          <Button
-            variant="outline"
-            onClick={clearAll}
-            disabled={!history.length}
-            className="rounded-full text-destructive hover:text-destructive"
-          >
-            <Trash2 className="mr-2 h-4 w-4" /> Hapus
-          </Button>
-        </div>
+        <Button
+          variant="outline"
+          onClick={exportCSV}
+          disabled={!filtered.length}
+          className="rounded-full"
+        >
+          <Download className="mr-2 h-4 w-4" /> Export CSV
+        </Button>
       </div>
 
       <div className="mb-6 grid gap-4 sm:grid-cols-3">
@@ -132,7 +109,7 @@ function RiwayatPage() {
 
       <div className="rounded-3xl border border-border/60 bg-card p-6 shadow-[var(--shadow-soft)]">
         <div className="mb-5 flex flex-wrap gap-3">
-          <div className="relative flex-1 min-w-[200px]">
+          <div className="relative min-w-[200px] flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={query}
@@ -147,9 +124,8 @@ function RiwayatPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="ALL">Semua Status</SelectItem>
-              <SelectItem value="BERLIMPAH">Berlimpah</SelectItem>
               <SelectItem value="NORMAL">Normal</SelectItem>
-              <SelectItem value="GAGAL">Gagal</SelectItem>
+              <SelectItem value="CRITICAL">Gagal</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -171,7 +147,6 @@ function RiwayatPage() {
                 <tr>
                   <th className="px-4 py-3">Tanggal</th>
                   <th className="px-4 py-3">Lokasi & Tanaman</th>
-                  <th className="px-4 py-3 text-right">Luas</th>
                   <th className="px-4 py-3 text-right">Hasil</th>
                   <th className="px-4 py-3 text-right">Total</th>
                   <th className="px-4 py-3">Status</th>
@@ -180,26 +155,26 @@ function RiwayatPage() {
               </thead>
               <tbody className="divide-y divide-border/60">
                 {filtered.map((h) => {
-                  const conf = STATUS_CONF[h.status];
+                  const conf = statusToConf(h.status);
                   return (
-                    <tr key={h.id} className="bg-card hover:bg-muted/30">
+                    <tr key={h.prediction_id} className="bg-card hover:bg-muted/30">
                       <td className="px-4 py-3 text-muted-foreground">
                         <Calendar className="mr-1 inline h-3.5 w-3.5" />
-                        {h.date}
+                        {h.timestamp.slice(0, 10)}
                       </td>
                       <td className="px-4 py-3">
-                        <div className="font-medium capitalize">{h.crop}</div>
+                        <div className="font-medium capitalize">{h.crop_type}</div>
                         <div className="text-xs text-muted-foreground">
                           <MapPin className="mr-1 inline h-3 w-3" />
-                          {h.location}
+                          {h.region}
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-right">{h.area} ha</td>
                       <td className="px-4 py-3 text-right font-semibold">
-                        {h.yield} <span className="text-xs text-muted-foreground">t/ha</span>
+                        {h.yield_per_ha.toFixed(2)}{" "}
+                        <span className="text-xs text-muted-foreground">t/ha</span>
                       </td>
                       <td className="px-4 py-3 text-right font-bold">
-                        {(h.yield * h.area).toFixed(1)} t
+                        {h.yield_total.toFixed(1)} t
                       </td>
                       <td className="px-4 py-3">
                         <span

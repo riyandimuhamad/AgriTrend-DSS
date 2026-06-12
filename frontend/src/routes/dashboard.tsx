@@ -12,8 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ApiError } from "@/components/ui/api-error";
-import { submitPrediction, fetchAdvice } from "@/lib/api/predict";
-import { saveToHistory, loadHistory } from "@/lib/api/history";
+import { submitPrediction, fetchAdvice, fetchHistory, type HistoryItem } from "@/lib/api/predict";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/dashboard")({
@@ -31,7 +30,7 @@ function backendStatusToStatus(status: string): Prediction["status"] {
 // ─── Komponen utama ───────────────────────────────────────────────────────────
 
 function Dashboard() {
-  const [history, setHistory] = useState<Prediction[]>([]);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
   const [current, setCurrent] = useState<Prediction | null>(null);
   const [loading, setLoading] = useState(false);
   const [adviceLoading, setAdviceLoading] = useState(false);
@@ -43,7 +42,9 @@ function Dashboard() {
   const [plantingDate, setPlantingDate] = useState(() => new Date().toISOString().slice(0, 10));
 
   useEffect(() => {
-    setHistory(loadHistory());
+    fetchHistory()
+      .then((res) => setHistory(res.data))
+      .catch(() => {});
   }, []);
 
   const onSubmit = async (e: { preventDefault(): void }) => {
@@ -81,8 +82,9 @@ function Dashboard() {
       };
 
       setCurrent(pred);
-      saveToHistory(pred);
-      setHistory(loadHistory());
+      fetchHistory()
+        .then((res) => setHistory(res.data))
+        .catch(() => {});
 
       // Lazy-load advice secara terpisah
       setAdviceLoading(true);
@@ -236,20 +238,21 @@ function Dashboard() {
               </div>
               <div className="mt-4 divide-y divide-border/60">
                 {history.slice(0, 5).map((h) => {
-                  const conf = STATUS_CONF[h.status];
+                  const conf = h.status === "CRITICAL" ? STATUS_CONF.GAGAL : STATUS_CONF.NORMAL;
                   return (
-                    <div key={h.id} className="flex items-center justify-between gap-3 py-3">
+                    <div
+                      key={h.prediction_id}
+                      className="flex items-center justify-between gap-3 py-3"
+                    >
                       <div className="min-w-0">
-                        <div className="truncate text-sm font-medium capitalize">
-                          {h.crop} · {h.area} ha
-                        </div>
+                        <div className="truncate text-sm font-medium capitalize">{h.crop_type}</div>
                         <div className="truncate text-xs text-muted-foreground">
-                          {h.location} · {h.date}
+                          {h.region} · {h.timestamp.slice(0, 10)}
                         </div>
                       </div>
                       <div className="text-right">
                         <div className="text-sm font-bold">
-                          {h.yield}{" "}
+                          {h.yield_per_ha.toFixed(2)}{" "}
                           <span className="text-xs font-normal text-muted-foreground">ton/ha</span>
                         </div>
                         <span
