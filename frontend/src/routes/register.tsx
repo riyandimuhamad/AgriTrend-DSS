@@ -3,13 +3,7 @@ import { Sprout, ArrowRight, Brain, CloudSun, BarChart3, AlertCircle } from "luc
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useState, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -24,6 +18,7 @@ export const Route = createFileRoute("/register")({
 function Register() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -128,7 +123,7 @@ function Register() {
         access_token: string | null;
         user: { email: string; user_metadata?: { full_name?: string; name?: string } } | null;
         message: string;
-      }>("/api/v1/auth/register", { email, password });
+      }>("/api/v1/auth/register", { username, email, password });
 
       const { access_token, user } = res.data;
 
@@ -265,6 +260,28 @@ function Register() {
               style={{ opacity: 0 }}
               className="space-y-2"
             >
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Contoh: budisantoso"
+                required
+                minLength={3}
+                maxLength={30}
+                pattern="[a-zA-Z0-9]+"
+                title="Hanya huruf dan angka, tanpa spasi"
+                className="h-12 rounded-xl"
+              />
+            </div>
+            <div
+              ref={(el) => {
+                fieldRefs.current[2] = el;
+              }}
+              style={{ opacity: 0 }}
+              className="space-y-2"
+            >
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
@@ -277,7 +294,7 @@ function Register() {
             </div>
             <div
               ref={(el) => {
-                fieldRefs.current[2] = el;
+                fieldRefs.current[3] = el;
               }}
               style={{ opacity: 0 }}
               className="space-y-2"
@@ -294,7 +311,7 @@ function Register() {
             </div>
             <div
               ref={(el) => {
-                fieldRefs.current[3] = el;
+                fieldRefs.current[4] = el;
               }}
               style={{ opacity: 0 }}
               className="space-y-2"

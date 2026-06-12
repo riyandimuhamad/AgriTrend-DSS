@@ -1,6 +1,6 @@
 import apiClient from "@/lib/api-client";
 
-// ─── Request — hanya 4 field dari form petani ─────────────────────────────────
+// ─── Request ──────────────────────────────────────────────────────────────────
 export interface PredictRequest {
   location: string;
   crop_type: string;
@@ -8,18 +8,18 @@ export interface PredictRequest {
   planting_date: string; // format YYYY-MM-DD
 }
 
-// ─── Response — struktur aktual dari backend ──────────────────────────────────
+// ─── POST /predict response ───────────────────────────────────────────────────
 export interface PredictData {
+  prediction_id: string;
   yield_per_ha: number;
   yield_total: number;
   unit: string;
   confidence: number;
   yield_min: number;
   yield_max: number;
-  status: "NORMAL" | "PANEN_BERLIMPAH" | "CRITICAL";
+  status: "NORMAL" | "CRITICAL";
   crop_type: string;
   region: string;
-  ai_advice: string;
   timestamp: string;
 }
 
@@ -28,8 +28,25 @@ export interface PredictResponse {
   data: PredictData;
 }
 
+// ─── GET /predict/{id}/advice response ───────────────────────────────────────
+export interface AdviceData {
+  analysis: string;
+  recommendation: string;
+}
+
+export interface AdviceResponse {
+  success: boolean;
+  prediction_id: string;
+  data: AdviceData;
+}
+
 // ─── Fungsi pemanggil API ─────────────────────────────────────────────────────
 export async function submitPrediction(data: PredictRequest): Promise<PredictResponse> {
   const res = await apiClient.post<PredictResponse>("/api/v1/ml/predict", data);
+  return res.data;
+}
+
+export async function fetchAdvice(predictionId: string): Promise<AdviceResponse> {
+  const res = await apiClient.get<AdviceResponse>(`/api/v1/ml/predict/${predictionId}/advice`);
   return res.data;
 }

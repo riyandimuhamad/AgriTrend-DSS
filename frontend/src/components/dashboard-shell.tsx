@@ -109,6 +109,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
 
 export type Prediction = {
   id: string;
+  predictionId: string;
   location: string;
   crop: string;
   area: number;
@@ -118,7 +119,7 @@ export type Prediction = {
   yieldTotal: number;
   status: "BERLIMPAH" | "NORMAL" | "GAGAL";
   confidence: number;
-  advice: string;
+  advice: { analysis: string; recommendation: string } | null;
 };
 
 export const STATUS_CONF = {

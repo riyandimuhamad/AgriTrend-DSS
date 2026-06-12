@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ApiError } from "@/components/ui/api-error";
-import { submitPrediction } from "@/lib/api/predict";
+import { submitPrediction, fetchAdvice } from "@/lib/api/predict";
 import { saveToHistory, loadHistory } from "@/lib/api/history";
 import { useEffect, useState } from "react";
 
@@ -24,7 +24,6 @@ export const Route = createFileRoute("/dashboard")({
 // ─── Helper ──────────────────────────────────────────────────────────────────
 
 function backendStatusToStatus(status: string): Prediction["status"] {
-  if (status === "PANEN_BERLIMPAH") return "BERLIMPAH";
   if (status === "CRITICAL") return "GAGAL";
   return "NORMAL";
 }
@@ -35,15 +34,13 @@ function Dashboard() {
   const [history, setHistory] = useState<Prediction[]>([]);
   const [current, setCurrent] = useState<Prediction | null>(null);
   const [loading, setLoading] = useState(false);
+  const [adviceLoading, setAdviceLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  // 4 field form — sesuai kebutuhan backend
   const [location, setLocation] = useState("");
   const [cropType, setCropType] = useState("Padi");
   const [landArea, setLandArea] = useState("2.5");
-  const [plantingDate, setPlantingDate] = useState(
-    () => new Date().toISOString().slice(0, 10), // default: hari ini
-  );
+  const [plantingDate, setPlantingDate] = useState(() => new Date().toISOString().slice(0, 10));
 
   useEffect(() => {
     setHistory(loadHistory());
@@ -68,6 +65,7 @@ function Dashboard() {
 
       const pred: Prediction = {
         id: crypto.randomUUID(),
+        predictionId: result.prediction_id,
         location: result.region ?? location.trim() ?? "Tidak diketahui",
         crop: cropType,
         area: parseFloat(landArea),
@@ -79,12 +77,25 @@ function Dashboard() {
         ),
         status,
         confidence: result.confidence ?? 85,
-        advice: result.ai_advice ?? "",
+        advice: null,
       };
 
       setCurrent(pred);
       saveToHistory(pred);
       setHistory(loadHistory());
+
+      // Lazy-load advice secara terpisah
+      setAdviceLoading(true);
+      fetchAdvice(result.prediction_id)
+        .then((adviceRes) => {
+          setCurrent((prev) => (prev ? { ...prev, advice: adviceRes.data } : prev));
+        })
+        .catch(() => {
+          // Advice gagal tidak mengganggu tampilan metrik
+        })
+        .finally(() => {
+          setAdviceLoading(false);
+        });
     } catch (err: unknown) {
       setApiError((err as Error)?.message ?? "Gagal mendapatkan prediksi. Coba lagi.");
     } finally {
@@ -214,7 +225,7 @@ function Dashboard() {
           )}
           {loading && <SkeletonResult />}
           {!loading && !current && !apiError && <EmptyState />}
-          {!loading && current && <ResultCard pred={current} />}
+          {!loading && current && <ResultCard pred={current} adviceLoading={adviceLoading} />}
 
           {/* Riwayat */}
           {history.length > 0 && (
@@ -307,7 +318,7 @@ const STATUS_DETAIL: Record<Prediction["status"], { cuaca: string; tanah: string
     GAGAL: { cuaca: "Kurang Baik", tanah: "Perlu Perbaikan", tren: "Di bawah rata-rata" },
   };
 
-function ResultCard({ pred }: { pred: Prediction }) {
+function ResultCard({ pred, adviceLoading }: { pred: Prediction; adviceLoading: boolean }) {
   const conf = STATUS_CONF[pred.status];
   const detail = STATUS_DETAIL[pred.status];
 
@@ -359,7 +370,7 @@ function ResultCard({ pred }: { pred: Prediction }) {
         <span>confidence</span>
       </div>
 
-      {/* 3 kartu ringkasan — label kualitatif dari status */}
+      {/* 3 kartu ringkasan */}
       <div className="mt-6 grid grid-cols-3 gap-3">
         <div className="rounded-2xl bg-muted/40 p-3">
           <CloudSun className="h-4 w-4 text-primary" />
@@ -383,7 +394,23 @@ function ResultCard({ pred }: { pred: Prediction }) {
         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary">
           <Brain className="h-3.5 w-3.5" /> Saran AI
         </div>
-        <p className="mt-3 text-sm leading-relaxed text-foreground/90">{pred.advice}</p>
+        {adviceLoading || pred.advice === null ? (
+          <div className="mt-3 space-y-2">
+            <div className="h-3 w-full animate-pulse rounded bg-primary/10" />
+            <div className="h-3 w-4/5 animate-pulse rounded bg-primary/10" />
+            <div className="h-3 w-3/5 animate-pulse rounded bg-primary/10" />
+          </div>
+        ) : (
+          <div className="mt-3 space-y-3">
+            <p className="text-sm leading-relaxed text-foreground/90">{pred.advice.analysis}</p>
+            <div className="rounded-xl border border-primary/20 bg-primary/10 px-4 py-3">
+              <p className="text-xs font-semibold text-primary">Rekomendasi 30 hari ke depan</p>
+              <p className="mt-1 text-sm leading-relaxed text-foreground/90">
+                {pred.advice.recommendation}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
