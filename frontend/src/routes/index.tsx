@@ -255,7 +255,7 @@ function Hero({ splashDone }: { splashDone: boolean }) {
                   <MapPin className="h-4 w-4 text-primary" /> Sleman, DI Yogyakarta
                 </div>
                 <span className="rounded-full bg-success/10 px-3 py-1 text-xs font-semibold text-success">
-                  PANEN BERLIMPAH
+                  NORMAL
                 </span>
               </div>
 

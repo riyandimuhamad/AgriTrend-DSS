@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as RiwayatRouteImport } from './routes/riwayat'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as LahanRouteImport } from './routes/lahan'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AnalitikRouteImport } from './routes/analitik'
 import { Route as IndexRouteImport } from './routes/index'
@@ -30,11 +29,6 @@ const RegisterRoute = RegisterRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LahanRoute = LahanRouteImport.update({
-  id: '/lahan',
-  path: '/lahan',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -57,7 +51,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analitik': typeof AnalitikRoute
   '/dashboard': typeof DashboardRoute
-  '/lahan': typeof LahanRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/riwayat': typeof RiwayatRoute
@@ -66,7 +59,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analitik': typeof AnalitikRoute
   '/dashboard': typeof DashboardRoute
-  '/lahan': typeof LahanRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/riwayat': typeof RiwayatRoute
@@ -76,7 +68,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/analitik': typeof AnalitikRoute
   '/dashboard': typeof DashboardRoute
-  '/lahan': typeof LahanRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/riwayat': typeof RiwayatRoute
@@ -87,25 +78,16 @@ export interface FileRouteTypes {
     | '/'
     | '/analitik'
     | '/dashboard'
-    | '/lahan'
     | '/login'
     | '/register'
     | '/riwayat'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/analitik'
-    | '/dashboard'
-    | '/lahan'
-    | '/login'
-    | '/register'
-    | '/riwayat'
+  to: '/' | '/analitik' | '/dashboard' | '/login' | '/register' | '/riwayat'
   id:
     | '__root__'
     | '/'
     | '/analitik'
     | '/dashboard'
-    | '/lahan'
     | '/login'
     | '/register'
     | '/riwayat'
@@ -115,7 +97,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalitikRoute: typeof AnalitikRoute
   DashboardRoute: typeof DashboardRoute
-  LahanRoute: typeof LahanRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   RiwayatRoute: typeof RiwayatRoute
@@ -142,13 +123,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lahan': {
-      id: '/lahan'
-      path: '/lahan'
-      fullPath: '/lahan'
-      preLoaderRoute: typeof LahanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -179,7 +153,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalitikRoute: AnalitikRoute,
   DashboardRoute: DashboardRoute,
-  LahanRoute: LahanRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   RiwayatRoute: RiwayatRoute,

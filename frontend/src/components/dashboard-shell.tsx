@@ -1,6 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Sprout, LogOut, History, TrendingUp, Leaf, Home } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useEffect, useState, type ReactNode } from "react";
 import { clearAuth, getUser } from "@/lib/auth";
 
@@ -8,7 +7,6 @@ const NAV = [
   { icon: Home, label: "Dashboard", to: "/dashboard" as const },
   { icon: History, label: "Riwayat", to: "/riwayat" as const },
   { icon: TrendingUp, label: "Analitik", to: "/analitik" as const },
-  { icon: Leaf, label: "Lahan Saya", to: "/lahan" as const },
 ];
 
 export function DashboardShell({ children }: { children: ReactNode }) {
@@ -95,11 +93,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
               );
             })}
           </div>
-          <div className="hidden items-center gap-2 lg:flex">
-            <Button asChild variant="outline" size="sm" className="rounded-full">
-              <Link to="/">Beranda</Link>
-            </Button>
-          </div>
+          <div className="hidden items-center gap-2 lg:flex"></div>
         </header>
         <main className="mx-auto max-w-7xl px-6 py-8 lg:px-10">{children}</main>
       </div>
