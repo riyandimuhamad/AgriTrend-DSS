@@ -90,9 +90,10 @@ Server berjalan di `http://localhost:8000`
 
 ### Prediksi
 
-| Method | Endpoint             | Deskripsi            | Auth |
-| ------ | -------------------- | -------------------- | ---- |
-| `POST` | `/api/v1/ml/predict` | Prediksi hasil panen | —    |
+| Method | Endpoint                              | Deskripsi              | Auth         |
+| ------ | ------------------------------------- | ---------------------- | ------------ |
+| `POST` | `/api/v1/ml/predict`                  | Prediksi hasil panen   | Bearer token |
+| `GET`  | `/api/v1/ml/predict/{id}/advice`      | AI advice prediksi     | Bearer token |
 
 ### Lainnya
 
@@ -147,6 +148,50 @@ Server berjalan di `http://localhost:8000`
 | `NORMAL` | Hasil ≥ 80% dari rata-rata historis kabupaten |
 | `WARNING` | Hasil 60–80% dari rata-rata |
 | `CRITICAL` | Hasil < 60% dari rata-rata |
+
+---
+
+## Supabase Setup
+
+Jalankan SQL berikut secara berurutan di **SQL Editor** Supabase.
+
+### 1. Buat tabel `predictions`
+
+```sql
+CREATE TABLE predictions (
+    id           uuid PRIMARY KEY,
+    user_id      uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    crop_type    text NOT NULL,
+    region       text NOT NULL,
+    yield_per_ha float8 NOT NULL,
+    yield_total  float8 NOT NULL,
+    yield_min    float8 NOT NULL,
+    yield_max    float8 NOT NULL,
+    confidence   int NOT NULL,
+    status       text NOT NULL,
+    unit         text NOT NULL DEFAULT 'ton',
+    created_at   timestamptz NOT NULL DEFAULT now()
+);
+```
+
+### 2. Aktifkan Row Level Security (RLS)
+
+```sql
+ALTER TABLE predictions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "user can manage own predictions"
+ON predictions FOR ALL
+USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
+```
+
+### 3. Index performa (opsional)
+
+```sql
+CREATE INDEX idx_predictions_user_id ON predictions(user_id);
+```
+
+> Tabel `auth.users` tidak perlu dibuat — dikelola otomatis oleh Supabase Auth.
 
 ---
 

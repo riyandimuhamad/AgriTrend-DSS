@@ -9,6 +9,7 @@ Decision Support System berbasis Machine Learning dan Generative AI untuk predik
 - [Prasyarat](#prasyarat)
 - [Instalasi](#instalasi)
 - [Konfigurasi](#konfigurasi)
+- [Supabase Setup](#supabase-setup)
 - [Menjalankan Aplikasi](#menjalankan-aplikasi)
 - [Perintah Tersedia](#perintah-tersedia)
 - [Dokumentasi API](#dokumentasi-api)
@@ -132,6 +133,50 @@ VITE_API_BASE_URL=http://localhost:8000
 | `ALLOWED_ORIGINS` | Tidak | `*`                | CORS origins, pisahkan dengan koma |
 | `HOST`            | Tidak | `0.0.0.0`          | Host server                        |
 | `PORT`            | Tidak | `8000`             | Port server                        |
+
+---
+
+## Supabase Setup
+
+Tabel dan kebijakan keamanan berikut harus dibuat secara manual melalui **SQL Editor** di dashboard Supabase project Anda.
+
+### 1. Buat tabel `predictions`
+
+```sql
+CREATE TABLE predictions (
+    id           uuid PRIMARY KEY,
+    user_id      uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    crop_type    text NOT NULL,
+    region       text NOT NULL,
+    yield_per_ha float8 NOT NULL,
+    yield_total  float8 NOT NULL,
+    yield_min    float8 NOT NULL,
+    yield_max    float8 NOT NULL,
+    confidence   int NOT NULL,
+    status       text NOT NULL,
+    unit         text NOT NULL DEFAULT 'ton',
+    created_at   timestamptz NOT NULL DEFAULT now()
+);
+```
+
+### 2. Aktifkan Row Level Security (RLS)
+
+```sql
+ALTER TABLE predictions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "user can manage own predictions"
+ON predictions FOR ALL
+USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
+```
+
+### 3. Buat index (opsional, untuk performa)
+
+```sql
+CREATE INDEX idx_predictions_user_id ON predictions(user_id);
+```
+
+> Tabel `auth.users` tidak perlu dibuat — sudah dikelola otomatis oleh Supabase Auth.
 
 ---
 

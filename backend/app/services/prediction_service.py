@@ -3,13 +3,15 @@ from datetime import datetime, timezone
 
 from fastapi import HTTPException
 
-from app.core.supabase_client import get_supabase_client
+from app.core.supabase_client import get_authed_client
 from app.schemas.prediction import (
     AdviceResponse,
     AIAdviceStructuredOutput,
     PredictionMetrics,
     PredictionRequest,
     PredictionResponse,
+    PredictionHistoryResponse,
+    PredictionHistoryItem,
 )
 from app.services.genai_service import GenAIService
 from app.services.location_service import LocationService
@@ -26,9 +28,10 @@ class PredictionService:
     def __init__(self) -> None:
         self._location = LocationService()
         self._genai = GenAIService()
-        self._db = get_supabase_client()
 
-    def predict(self, payload: PredictionRequest) -> PredictionResponse:
+    def predict(
+        self, payload: PredictionRequest, user_id: str, access_token: str
+    ) -> PredictionResponse:
         coords = self._location.resolve_by_name(payload.location)
 
         try:
@@ -52,20 +55,24 @@ class PredictionService:
         prediction_id = str(uuid.uuid4())
         status = _STATUS_MAP.get(ml["status"], "WARNING")
         now = datetime.now(timezone.utc)
+        db = get_authed_client(access_token)
 
-        self._db.table("predictions").insert({
-            "id": prediction_id,
-            "crop_type": payload.crop_type,
-            "region": coords["region"],
-            "yield_per_ha": ml["yield_per_ha"],
-            "yield_total": ml["yield_total"],
-            "confidence": ml["confidence"],
-            "yield_min": ml["yield_min"],
-            "yield_max": ml["yield_max"],
-            "status": status,
-            "unit": "ton",
-            "created_at": now.isoformat(),
-        }).execute()
+        db.table("predictions").insert(
+            {
+                "id": prediction_id,
+                "user_id": user_id,
+                "crop_type": payload.crop_type,
+                "region": coords["region"],
+                "yield_per_ha": ml["yield_per_ha"],
+                "yield_total": ml["yield_total"],
+                "confidence": ml["confidence"],
+                "yield_min": ml["yield_min"],
+                "yield_max": ml["yield_max"],
+                "status": status,
+                "unit": "ton",
+                "created_at": now.isoformat(),
+            }
+        ).execute()
 
         return PredictionResponse(
             data=PredictionMetrics(
@@ -83,11 +90,16 @@ class PredictionService:
             )
         )
 
-    def get_advice(self, prediction_id: str) -> AdviceResponse:
+    def get_advice(
+        self, prediction_id: str, user_id: str, access_token: str
+    ) -> AdviceResponse:
+        db = get_authed_client(access_token)
+
         result = (
-            self._db.table("predictions")
+            db.table("predictions")
             .select("crop_type, region, yield_per_ha, status")
             .eq("id", prediction_id)
+            .eq("user_id", user_id)
             .maybe_single()
             .execute()
         )
@@ -95,10 +107,11 @@ class PredictionService:
         if result.data is None:
             raise HTTPException(
                 status_code=404,
-                detail="Prediction ID tidak ditemukan atau sudah kedaluwarsa.",
+                detail="Prediction ID tidak ditemukan.",
             )
 
         row = result.data
+
         advice: AIAdviceStructuredOutput = self._genai.generate_advice(
             crop_type=row["crop_type"],
             region=row["region"],
@@ -107,3 +120,36 @@ class PredictionService:
         )
 
         return AdviceResponse(prediction_id=prediction_id, data=advice)
+
+    def get_history(self, user_id: str, access_token: str) -> PredictionHistoryResponse:
+        db = get_authed_client(access_token)
+
+        result = (
+            db.table("predictions")
+            .select(
+                "id, crop_type, region, yield_per_ha, yield_total, "
+                "confidence, yield_min, yield_max, status, unit, created_at"
+            )
+            .eq("user_id", user_id)
+            .order("created_at", desc=True)
+            .execute()
+        )
+
+        return PredictionHistoryResponse(
+            data=[
+                PredictionHistoryItem(
+                    prediction_id=row["id"],
+                    crop_type=row["crop_type"],
+                    region=row["region"],
+                    yield_per_ha=row["yield_per_ha"],
+                    yield_total=row["yield_total"],
+                    confidence=row["confidence"],
+                    yield_min=row["yield_min"],
+                    yield_max=row["yield_max"],
+                    status=row["status"],
+                    unit=row["unit"],
+                    timestamp=row["created_at"],
+                )
+                for row in result.data
+            ]
+        )

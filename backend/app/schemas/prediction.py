@@ -10,13 +10,15 @@ class PredictionRequest(BaseModel):
     planting_date: date
 
 
-# --- Structured output schema for Gemini ---
 class AIAdviceStructuredOutput(BaseModel):
-    analysis: str = Field(description="Analisis supply-demand dan risiko pasar, 2-3 paragraf.")
-    recommendation: str = Field(description="Satu tindakan konkret yang bisa dieksekusi petani dalam 30 hari ke depan.")
+    analysis: str = Field(
+        description="Analisis supply-demand dan risiko pasar, 2-3 paragraf."
+    )
+    recommendation: str = Field(
+        description="Satu tindakan konkret yang bisa dieksekusi petani dalam 30 hari ke depan."
+    )
 
 
-# --- Response schemas ---
 class PredictionMetrics(BaseModel):
     prediction_id: str
     yield_per_ha: float
@@ -34,6 +36,25 @@ class PredictionMetrics(BaseModel):
 class PredictionResponse(BaseModel):
     success: bool = True
     data: PredictionMetrics
+
+
+class PredictionHistoryItem(BaseModel):
+    prediction_id: str
+    crop_type: str
+    region: str
+    yield_per_ha: float
+    yield_total: float
+    unit: str
+    confidence: int
+    yield_min: float
+    yield_max: float
+    status: str
+    timestamp: datetime
+
+
+class PredictionHistoryResponse(BaseModel):
+    success: bool = True
+    data: list[PredictionHistoryItem]
 
 
 class AdviceResponse(BaseModel):
