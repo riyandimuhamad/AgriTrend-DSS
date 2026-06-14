@@ -64,6 +64,7 @@ export interface HistoryItem {
   yield_max: number;
   status: string;
   timestamp: string;
+  advice?: AdviceData | null;
 }
 
 export interface HistoryResponse {

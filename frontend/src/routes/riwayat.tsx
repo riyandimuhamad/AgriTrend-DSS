@@ -10,8 +10,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Search, Download, MapPin, Calendar, History as HistoryIcon } from "lucide-react";
-import { fetchHistory, type HistoryItem } from "@/lib/api/predict";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Search,
+  Download,
+  MapPin,
+  Calendar,
+  History as HistoryIcon,
+  Loader2,
+  Sparkles,
+  ChevronRight,
+} from "lucide-react";
+import { fetchHistory, fetchAdvice, type HistoryItem, type AdviceData } from "@/lib/api/predict";
 
 export const Route = createFileRoute("/riwayat")({
   head: () => ({ meta: [{ title: "Riwayat — Agri Trend DSS" }] }),
@@ -26,6 +36,9 @@ function RiwayatPage() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<string>("ALL");
+  const [selectedItem, setSelectedItem] = useState<HistoryItem | null>(null);
+  const [dialogAdvice, setDialogAdvice] = useState<AdviceData | null>(null);
+  const [adviceLoading, setAdviceLoading] = useState(false);
 
   useEffect(() => {
     fetchHistory()
@@ -41,6 +54,29 @@ function RiwayatPage() {
       return okQ && okS;
     });
   }, [history, query, filter]);
+
+  function openDetail(item: HistoryItem) {
+    setSelectedItem(item);
+    setDialogAdvice(item.advice ?? null);
+  }
+
+  async function loadAdvice() {
+    if (!selectedItem) return;
+    setAdviceLoading(true);
+    try {
+      const res = await fetchAdvice(selectedItem.prediction_id);
+      setDialogAdvice(res.data);
+      setHistory((prev) =>
+        prev.map((h) =>
+          h.prediction_id === selectedItem.prediction_id ? { ...h, advice: res.data } : h,
+        ),
+      );
+    } catch {
+      // silently fail — user can retry
+    } finally {
+      setAdviceLoading(false);
+    }
+  }
 
   const exportCSV = () => {
     const rows = [
@@ -141,8 +177,8 @@ function RiwayatPage() {
             </p>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-2xl border border-border/60">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto rounded-2xl border border-border/60">
+            <table className="min-w-[640px] w-full text-sm">
               <thead className="bg-muted/50 text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Tanggal</th>
@@ -151,13 +187,18 @@ function RiwayatPage() {
                   <th className="px-4 py-3 text-right">Total</th>
                   <th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3 text-right">Confidence</th>
+                  <th className="px-4 py-3 w-8" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/60">
                 {filtered.map((h) => {
                   const conf = statusToConf(h.status);
                   return (
-                    <tr key={h.prediction_id} className="bg-card hover:bg-muted/30">
+                    <tr
+                      key={h.prediction_id}
+                      onClick={() => openDetail(h)}
+                      className="cursor-pointer bg-card hover:bg-muted/30 transition-colors"
+                    >
                       <td className="px-4 py-3 text-muted-foreground">
                         <Calendar className="mr-1 inline h-3.5 w-3.5" />
                         {h.timestamp.slice(0, 10)}
@@ -186,6 +227,9 @@ function RiwayatPage() {
                       <td className="px-4 py-3 text-right text-muted-foreground">
                         {h.confidence}%
                       </td>
+                      <td className="px-4 py-3 text-muted-foreground">
+                        <ChevronRight className="h-4 w-4" />
+                      </td>
                     </tr>
                   );
                 })}
@@ -194,6 +238,107 @@ function RiwayatPage() {
           </div>
         )}
       </div>
+
+      {/* Detail Dialog */}
+      <Dialog open={!!selectedItem} onOpenChange={(open) => !open && setSelectedItem(null)}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl">
+          {selectedItem && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="text-xl">Detail Prediksi</DialogTitle>
+              </DialogHeader>
+
+              {/* Header info */}
+              <div className="flex items-center gap-3 rounded-xl bg-muted/50 p-4">
+                <div className="flex-1">
+                  <div className="text-lg font-bold capitalize">{selectedItem.crop_type}</div>
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <MapPin className="h-3.5 w-3.5" />
+                    {selectedItem.region}
+                  </div>
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
+                    <Calendar className="h-3 w-3" />
+                    {selectedItem.timestamp.slice(0, 10)}
+                  </div>
+                </div>
+                <span
+                  className={`rounded-full px-3 py-1.5 text-xs font-semibold ${statusToConf(selectedItem.status).bg} ${statusToConf(selectedItem.status).color}`}
+                >
+                  {statusToConf(selectedItem.status).label}
+                </span>
+              </div>
+
+              {/* Metrics grid */}
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {[
+                  { label: "Hasil per Ha", value: `${selectedItem.yield_per_ha.toFixed(2)} t/ha` },
+                  { label: "Total Panen", value: `${selectedItem.yield_total.toFixed(1)} ton` },
+                  {
+                    label: "Rentang Prediksi",
+                    value: `${selectedItem.yield_min.toFixed(1)}–${selectedItem.yield_max.toFixed(1)} t/ha`,
+                  },
+                  { label: "Confidence", value: `${selectedItem.confidence}%` },
+                ].map((m) => (
+                  <div key={m.label} className="rounded-xl border border-border/60 bg-card p-3">
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                      {m.label}
+                    </div>
+                    <div className="mt-1 text-base font-bold">{m.value}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* AI Advice */}
+              <div className="rounded-xl border border-border/60 bg-card p-4">
+                <div className="mb-3 flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-semibold">Analisis AI</span>
+                </div>
+
+                {dialogAdvice ? (
+                  <div className="space-y-4">
+                    <div>
+                      <div className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                        Analisis Pasar
+                      </div>
+                      <p className="text-sm leading-relaxed text-foreground/90">
+                        {dialogAdvice.analysis}
+                      </p>
+                    </div>
+                    <div className="rounded-lg bg-primary/5 border border-primary/20 p-3">
+                      <div className="mb-1 text-xs font-medium uppercase tracking-wider text-primary">
+                        Rekomendasi
+                      </div>
+                      <p className="text-sm leading-relaxed font-medium">
+                        {dialogAdvice.recommendation}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center gap-3 py-4 text-center">
+                    <p className="text-sm text-muted-foreground">
+                      Belum ada analisis AI untuk prediksi ini.
+                    </p>
+                    <Button
+                      onClick={loadAdvice}
+                      disabled={adviceLoading}
+                      size="sm"
+                      className="rounded-full"
+                    >
+                      {adviceLoading ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : (
+                        <Sparkles className="mr-2 h-4 w-4" />
+                      )}
+                      {adviceLoading ? "Memuat..." : "Muat Analisis AI"}
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </DashboardShell>
   );
 }
