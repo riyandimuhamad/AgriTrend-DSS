@@ -124,7 +124,7 @@ class PredictionService:
                 "advice_analysis": advice.analysis,
                 "advice_recommendation": advice.recommendation,
             }
-        ).eq("user_id", user_id).execute()
+        ).eq("id", prediction_id).eq("user_id", user_id).execute()
 
         return AdviceResponse(prediction_id=prediction_id, data=advice)
 
