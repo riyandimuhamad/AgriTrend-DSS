@@ -93,7 +93,7 @@ Jalankan setup otomatis:
 node setup.js
 ```
 
-Script akan menangani seluruh proses: menyalin file `.env`, menginstall dependencies frontend dan backend, lalu menjalankan kedua server secara bersamaan.
+Script akan menangani seluruh proses: menyalin file `.env`, menginstall dependencies frontend dan backend, melatih serta memvalidasi model Machine Learning secara otomatis (`train_model.py` & `predictor.py`), lalu menjalankan kedua server secara bersamaan.
 
 ---
 
@@ -201,14 +201,14 @@ node setup.js dev
 
 ## Perintah Tersedia
 
-| Perintah                | Keterangan                                       |
-| ----------------------- | ------------------------------------------------ |
-| `node setup.js`         | Install semua dependensi dan jalankan dev server |
-| `node setup.js install` | Hanya install dependensi                         |
-| `node setup.js dev`     | Hanya jalankan dev server                        |
-| `npm run setup`         | Alias untuk `node setup.js`                      |
-| `npm run install:all`   | Alias untuk `node setup.js install`              |
-| `npm run dev`           | Alias untuk `node setup.js dev`                  |
+| Perintah                | Keterangan                                                                     |
+| ----------------------- | ------------------------------------------------------------------------------ |
+| `node setup.js`         | Install dependensi, train & verifikasi model ML, dan jalankan dev server       |
+| `node setup.js install` | Hanya install dependensi dan setup (train/verifikasi) model ML                |
+| `node setup.js dev`     | Hanya jalankan dev server                                                      |
+| `npm run setup`         | Alias untuk `node setup.js`                                                    |
+| `npm run install:all`   | Alias untuk `node setup.js install`                                            |
+| `npm run dev`           | Alias untuk `node setup.js dev`                                                |
 
 ---
 

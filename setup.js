@@ -93,6 +93,37 @@ function installBackend() {
   log("[ok] Backend dependencies terinstall", "green");
 }
 
+function setupMLModels() {
+  log("\n-- Menyiapkan model Machine Learning --", "bold");
+  const ML_DIR = join(ROOT, "ml_models");
+  const isWin = process.platform === "win32";
+  const venvPython = isWin
+    ? join(BACKEND_DIR, ".venv", "Scripts", "python.exe")
+    : join(BACKEND_DIR, ".venv", "bin", "python");
+
+  let pythonCmd = "python";
+  if (existsSync(venvPython)) {
+    pythonCmd = venvPython;
+    log(`[ok] Virtual environment python ditemukan: ${venvPython}`, "green");
+  } else {
+    try {
+      execSync("python3 --version", { stdio: "pipe" });
+      pythonCmd = "python3";
+    } catch {
+      pythonCmd = "python";
+    }
+    log(`[!]  Virtual environment tidak ditemukan. Menggunakan system python: ${pythonCmd}`, "yellow");
+  }
+
+  log("\nRunning train_model.py...");
+  run(`"${pythonCmd}" train_model.py`, ML_DIR);
+  log("[ok] train_model.py selesai dijalankan", "green");
+
+  log("\nRunning predictor.py...");
+  run(`"${pythonCmd}" predictor.py`, ML_DIR);
+  log("[ok] predictor.py selesai dijalankan", "green");
+}
+
 function startDev() {
   log("\n-- Menjalankan development server --", "bold");
   log("     Backend  -> http://localhost:8000", "cyan");
@@ -162,6 +193,7 @@ switch (command) {
     setupEnvFiles();
     installFrontend();
     installBackend();
+    setupMLModels();
     log(
       "\n\uD83C\uDF31 Instalasi selesai. Jalankan: node setup.js dev\n",
       "green",
@@ -177,6 +209,7 @@ switch (command) {
     setupEnvFiles();
     installFrontend();
     installBackend();
+    setupMLModels();
     log("\n\uD83C\uDF31 Instalasi selesai. Memulai server...\n", "green");
     startDev();
     break;
