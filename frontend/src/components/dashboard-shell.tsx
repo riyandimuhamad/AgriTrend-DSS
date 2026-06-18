@@ -95,7 +95,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-muted/30">
-      {/* Desktop Sidebar */}
+      {/* Desktop sidebar */}
       <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-border/60 bg-sidebar lg:flex">
         <SidebarContent user={user} pathname={pathname} logout={logout} />
       </aside>
@@ -136,6 +136,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
             <div className="text-xs text-muted-foreground">Halo,</div>
             <div className="text-sm font-semibold capitalize">{user.name}</div>
           </div>
+
           <div className="hidden items-center gap-2 lg:flex" />
         </header>
         <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-10 lg:py-8">{children}</main>
