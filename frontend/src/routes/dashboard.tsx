@@ -36,7 +36,7 @@ function Dashboard() {
   const [adviceLoading, setAdviceLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState("Bandung");
   const [cropType, setCropType] = useState("Padi");
   const [landArea, setLandArea] = useState("2.5");
   const [plantingDate, setPlantingDate] = useState(() => new Date().toISOString().slice(0, 10));
@@ -133,14 +133,41 @@ function Dashboard() {
                   <MapPin className="mr-1 inline h-3.5 w-3.5" />
                   Lokasi Lahan
                 </Label>
-                <Input
-                  id="loc"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="Contoh: Subang, Jawa Barat"
-                  required
-                  className="h-11 rounded-xl"
-                />
+                <Select value={location} onValueChange={setLocation}>
+                  <SelectTrigger id="loc" className="h-11 rounded-xl">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[
+                      { label: "Kab. Bandung", value: "Bandung" },
+                      { label: "Kab. Bandung Barat", value: "Bandung Barat" },
+                      { label: "Kab. Bekasi", value: "Bekasi" },
+                      { label: "Kab. Bogor", value: "Bogor" },
+                      { label: "Kab. Ciamis", value: "Ciamis" },
+                      { label: "Kab. Cianjur", value: "Cianjur" },
+                      { label: "Kab. Cirebon", value: "Cirebon" },
+                      { label: "Kab. Garut", value: "Garut" },
+                      { label: "Kab. Indramayu", value: "Indramayu" },
+                      { label: "Kab. Karawang", value: "Karawang" },
+                      { label: "Kab. Kuningan", value: "Kuningan" },
+                      { label: "Kab. Majalengka", value: "Majalengka" },
+                      { label: "Kab. Pangandaran", value: "Pangandaran" },
+                      { label: "Kab. Purwakarta", value: "Purwakarta" },
+                      { label: "Kab. Subang", value: "Subang" },
+                      { label: "Kab. Sukabumi", value: "Sukabumi" },
+                      { label: "Kab. Sumedang", value: "Sumedang" },
+                      { label: "Kab. Tasikmalaya", value: "Tasikmalaya" },
+                    ].map((kab) => (
+                      <SelectItem key={kab.value} value={kab.value}>
+                        {kab.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-[11px] text-muted-foreground">
+                  Karena website masih berupa MVP, lokasi hanya terbatas untuk wilayah di Jawa
+                  Barat.
+                </p>
               </div>
 
               {/* Jenis tanaman */}
@@ -158,6 +185,10 @@ function Dashboard() {
                     <SelectItem value="Jagung">Jagung</SelectItem>
                   </SelectContent>
                 </Select>
+                <p className="text-[11px] text-muted-foreground">
+                  Karena website masih berupa MVP, tanaman hanya terbatas untuk padi dan jagung
+                  saja.
+                </p>
               </div>
 
               {/* Luas lahan */}

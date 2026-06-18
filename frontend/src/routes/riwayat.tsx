@@ -77,7 +77,6 @@ function RiwayatPage() {
       setAdviceLoading(false);
     }
   }
-
   const exportCSV = () => {
     const rows = [
       ["Tanggal", "Lokasi", "Tanaman", "Hasil (ton/ha)", "Total (ton)", "Status", "Confidence"],

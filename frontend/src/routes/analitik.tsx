@@ -141,17 +141,59 @@ function AnalitikPage() {
               {stats.trendDelta.toFixed(1)}%
             </div>
           </div>
-          <div className="mt-6 flex h-48 items-end gap-2">
-            {stats.trendPoints.map((v, i) => (
-              <div key={i} className="flex flex-1 flex-col items-center gap-1">
-                <span className="text-[10px] text-muted-foreground">{v.toFixed(1)}</span>
-                <div
-                  className="w-full rounded-t-lg bg-[image:var(--gradient-hero)] transition-all hover:opacity-80"
-                  style={{ height: `${(v / maxTrend) * 160}px` }}
+          {(() => {
+            const W = 560,
+              H = 160;
+            const pad = { t: 24, r: 12, b: 20, l: 12 };
+            const iW = W - pad.l - pad.r;
+            const iH = H - pad.t - pad.b;
+            const pts = stats.trendPoints.map((v, i) => ({
+              x:
+                pad.l +
+                (stats.trendPoints.length > 1 ? (i / (stats.trendPoints.length - 1)) * iW : iW / 2),
+              y: pad.t + iH - (v / maxTrend) * iH,
+              v,
+            }));
+            const linePath = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
+            const areaPath = `${linePath} L${pts[pts.length - 1].x},${pad.t + iH} L${pts[0].x},${pad.t + iH} Z`;
+            return (
+              <svg viewBox={`0 0 ${W} ${H}`} className="mt-6 w-full" style={{ height: 192 }}>
+                <defs>
+                  <linearGradient id="lg-trend-line" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="hsl(var(--primary))" />
+                    <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.7" />
+                  </linearGradient>
+                  <linearGradient id="lg-trend-area" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.18" />
+                    <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+                <path d={areaPath} fill="url(#lg-trend-area)" />
+                <path
+                  d={linePath}
+                  fill="none"
+                  stroke="url(#lg-trend-line)"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
-              </div>
-            ))}
-          </div>
+                {pts.map((p, i) => (
+                  <g key={i}>
+                    <circle cx={p.x} cy={p.y} r="4" fill="hsl(var(--primary))" />
+                    <text
+                      x={p.x}
+                      y={p.y - 9}
+                      textAnchor="middle"
+                      fontSize="9"
+                      fill="hsl(var(--muted-foreground))"
+                    >
+                      {p.v.toFixed(1)}
+                    </text>
+                  </g>
+                ))}
+              </svg>
+            );
+          })()}
         </div>
 
         {/* Status breakdown */}
